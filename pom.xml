@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.spldev</groupId>
+		<artifactId>spldev</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>formula-analysis-sharpsat</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Formula-Analysis-sharpSAT Lib</name>
+	<description></description>
+	<url>https://github.com/skrieter/formula-analysis-sharpsat</url>
+
+	<properties>
+		<project.dependency.relativepath>dependency</project.dependency.relativepath>
+		<project.dependency.path>${project.build.directory}/${project.dependency.relativepath}</project.dependency.path>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>os-unix</id>
+			<activation>
+				<os>
+					<family>Unix</family>
+				</os>
+			</activation>
+			<properties>
+				<lib.dir>unix</lib.dir>
+			</properties>
+		</profile>
+		<profile>
+			<id>os-windows</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+			</activation>
+			<properties>
+				<lib.dir>win</lib.dir>
+			</properties>
+		</profile>
+		<profile>
+			<id>os-mac</id>
+			<activation>
+				<os>
+					<family>Mac</family>
+				</os>
+			</activation>
+			<properties>
+				<lib.dir>mac</lib.dir>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.spldev</groupId>
+			<artifactId>util</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.spldev</groupId>
+			<artifactId>formula</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.spldev</groupId>
+			<artifactId>formula-analysis</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+				<executions>
+					<execution>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
