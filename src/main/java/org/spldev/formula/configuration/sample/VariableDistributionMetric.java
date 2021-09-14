@@ -30,7 +30,8 @@ import org.spldev.formula.clauses.*;
 import org.spldev.formula.expression.atomic.literal.*;
 
 /**
- * Tests whether a set of configurations achieves t-wise feature coverage.
+ * Tests whether a set of configurations achieves the same variable distribution
+ * as the complete valid configuration space.
  *
  * @author Sebastian Krieter
  */
@@ -44,26 +45,36 @@ public class VariableDistributionMetric implements SampleMetric {
 
 	@Override
 	public double get(SolutionList sample) {
+		if (sample.getSolutions().isEmpty()) {
+			return 0;
+		}
+		CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
+		final BigInteger totalCount = analysis.getResult(rep).orElseThrow();
+
 		final VariableMap variables = sample.getVariables();
+		final double sampleSize = (double) sample.getSolutions().size();
+		int diffSum = 0;
 		for (int i = 1; i <= variables.getMaxIndex(); i++) {
-			int count = 0;
+			int positiveCount = 0;
 			for (final LiteralList solution : sample.getSolutions()) {
 				if (solution.containsAnyLiteral(i)) {
-					count++;
+					positiveCount++;
 				}
 			}
-			final double ratio = (double) count / sample.getSolutions().size();
+			final double sampleRatio = positiveCount / sampleSize;
+
+			analysis = new CountSolutionsAnalysis();
+			analysis.getAssumptions().set(i, true);
+			final double actualRatio = 1.0 / totalCount.divide(analysis.getResult(rep).orElseThrow()).doubleValue();
+
+			diffSum += Math.abs(actualRatio - sampleRatio);
 		}
-		final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-		final BigInteger result = analysis.getResult(rep).orElseThrow();
-		final BigInteger size = BigInteger.valueOf(sample.getSolutions().size());
-		size.divide(result);
-		return 1;
+		return (double) diffSum / variables.getMaxIndex();
 	}
 
 	@Override
 	public String getName() {
-		return "Completeness";
+		return "DistributionPrecision";
 	}
 
 }

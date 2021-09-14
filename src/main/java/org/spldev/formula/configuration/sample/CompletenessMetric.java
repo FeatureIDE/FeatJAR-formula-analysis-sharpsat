@@ -22,14 +22,12 @@
  */
 package org.spldev.formula.configuration.sample;
 
-import java.math.*;
-
 import org.spldev.formula.*;
 import org.spldev.formula.analysis.sharpsat.*;
 import org.spldev.formula.clauses.*;
 
 /**
- * Tests whether a set of configurations achieves t-wise feature coverage.
+ * Computes the ratio of configuration space covered by a configuration sample.
  *
  * @author Sebastian Krieter
  */
@@ -43,11 +41,8 @@ public class CompletenessMetric implements SampleMetric {
 
 	@Override
 	public double get(SolutionList sample) {
-		final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-		final BigInteger result = analysis.getResult(rep).orElseThrow();
-		final BigInteger size = BigInteger.valueOf(sample.getSolutions().size());
-		size.divide(result);
-		return 1;
+		final double totalSize = new CountSolutionsAnalysis().getResult(rep).orElseThrow().doubleValue();
+		return totalSize > 0 ? sample.getSolutions().size() / totalSize : 0;
 	}
 
 	@Override
