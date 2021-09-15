@@ -65,12 +65,24 @@ public class SharpSatSolver implements org.spldev.formula.solver.SharpSatSolver 
 			final Path tempFile = Files.createTempFile("sharpSATinput", ".dimacs");
 			FileHandler.save(cnf, tempFile, new DIMACSFormatCNF());
 
-			final List<String> command = new ArrayList<>(3);
-			command.add("./sharpSAT");
+			final List<String> command = new ArrayList<>(5);
+			final String os = System.getProperty("os.name").toLowerCase().split("\\s+")[0];
+			switch (os) {
+			case "linux":
+				command.add("./libs/sharpSAT");
+				break;
+			case "windows":
+				command.add("libs\\sharpSAT.exe");
+				break;
+			default:
+				Logger.logError("Unsupported operating system " + os);
+				return INVALID_COUNT;
+			}
 			command.add("-noPP");
 			command.add("-noCC");
 			command.add("-noIBCP");
 			command.add(tempFile.toString());
+
 			final ProcessBuilder processBuilder = new ProcessBuilder(command);
 			Process process = null;
 			try {

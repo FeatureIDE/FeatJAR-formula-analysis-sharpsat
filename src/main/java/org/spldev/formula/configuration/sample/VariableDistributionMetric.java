@@ -52,7 +52,7 @@ public class VariableDistributionMetric implements SampleMetric {
 		final BigInteger totalCount = analysis.getResult(rep).orElseThrow();
 
 		final VariableMap variables = sample.getVariables();
-		final double sampleSize = (double) sample.getSolutions().size();
+		final double sampleSize = sample.getSolutions().size();
 		int diffSum = 0;
 		for (int i = 1; i <= variables.getMaxIndex(); i++) {
 			int positiveCount = 0;

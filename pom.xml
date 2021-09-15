@@ -1,24 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.spldev</groupId>
 		<artifactId>spldev</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>formula-analysis-sharpsat</artifactId>
 	<packaging>jar</packaging>
 
 	<name>Formula-Analysis-sharpSAT Lib</name>
 	<description></description>
 	<url>https://github.com/skrieter/formula-analysis-sharpsat</url>
-
-	<properties>
-		<project.dependency.relativepath>dependency</project.dependency.relativepath>
-		<project.dependency.path>${project.build.directory}/${project.dependency.relativepath}</project.dependency.path>
-	</properties>
 
 	<profiles>
 		<profile>
@@ -72,20 +68,78 @@
 			<artifactId>formula-analysis</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.spldev</groupId>
+			<artifactId>formula-analysis-sharpsat-native</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<type>${lib.dir}.tar.gz</type>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
+				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
 					<execution>
-						<phase>none</phase>
+						<id>copy-dependency</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.spldev</groupId>
+									<artifactId>formula-analysis-sharpsat-native</artifactId>
+									<type>${lib.dir}.tar.gz</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.basedir}/libs</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/target/libs</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/libs</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-help-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>show-profiles</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>active-profiles</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
