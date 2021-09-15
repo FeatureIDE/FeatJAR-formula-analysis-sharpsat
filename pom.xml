@@ -70,7 +70,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.spldev</groupId>
-			<artifactId>formula-analysis-sharpsat-native</artifactId>
+			<artifactId>sharpsat-native</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<type>${lib.dir}.tar.gz</type>
 		</dependency>
@@ -92,7 +92,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.spldev</groupId>
-									<artifactId>formula-analysis-sharpsat-native</artifactId>
+									<artifactId>sharpsat-native</artifactId>
 									<type>${lib.dir}.tar.gz</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.basedir}/libs</outputDirectory>
