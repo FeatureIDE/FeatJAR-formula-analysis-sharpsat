@@ -16,42 +16,6 @@
 	<description></description>
 	<url>https://github.com/skrieter/formula-analysis-sharpsat</url>
 
-	<profiles>
-		<profile>
-			<id>os-unix</id>
-			<activation>
-				<os>
-					<family>Unix</family>
-				</os>
-			</activation>
-			<properties>
-				<lib.dir>unix</lib.dir>
-			</properties>
-		</profile>
-		<profile>
-			<id>os-windows</id>
-			<activation>
-				<os>
-					<family>Windows</family>
-				</os>
-			</activation>
-			<properties>
-				<lib.dir>win</lib.dir>
-			</properties>
-		</profile>
-		<profile>
-			<id>os-mac</id>
-			<activation>
-				<os>
-					<family>Mac</family>
-				</os>
-			</activation>
-			<properties>
-				<lib.dir>mac</lib.dir>
-			</properties>
-		</profile>
-	</profiles>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.spldev</groupId>
@@ -72,7 +36,7 @@
 			<groupId>org.spldev</groupId>
 			<artifactId>sharpsat-native</artifactId>
 			<version>1.0-SNAPSHOT</version>
-			<type>${lib.dir}.tar.gz</type>
+			<type>tar.gz</type>
 		</dependency>
 	</dependencies>
 
@@ -93,7 +57,7 @@
 								<artifactItem>
 									<groupId>org.spldev</groupId>
 									<artifactId>sharpsat-native</artifactId>
-									<type>${lib.dir}.tar.gz</type>
+									<type>tar.gz</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.basedir}/libs</outputDirectory>
 								</artifactItem>
@@ -124,22 +88,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-help-plugin</artifactId>
-				<version>3.2.0</version>
-				<executions>
-					<execution>
-						<id>show-profiles</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>active-profiles</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 	</build>
 
