@@ -22,6 +22,8 @@
  */
 package org.spldev.formula.configuration.sample;
 
+import java.math.*;
+
 import org.spldev.formula.*;
 import org.spldev.formula.analysis.sharpsat.*;
 import org.spldev.formula.clauses.*;
@@ -41,8 +43,15 @@ public class CompletenessMetric implements SampleMetric {
 
 	@Override
 	public double get(SolutionList sample) {
-		final double totalSize = new CountSolutionsAnalysis().getResult(rep).orElseThrow().doubleValue();
-		return totalSize > 0 ? sample.getSolutions().size() / totalSize : 0;
+		final BigDecimal totalSize = new CountSolutionsAnalysis() //
+			.getResult(rep) //
+			.map(BigDecimal::new) //
+			.orElseThrow();
+		return totalSize.signum() > 0 //
+			? new BigDecimal(sample.getSolutions().size()) //
+				.divide(totalSize, MathContext.DECIMAL128) //
+				.doubleValue()
+			: 0;
 	}
 
 	@Override

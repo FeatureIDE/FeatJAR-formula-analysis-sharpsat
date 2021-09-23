@@ -34,17 +34,17 @@ import org.spldev.formula.expression.atomic.literal.*;
 
 public class DistributionMetrics extends AggregatableMetrics {
 
-	private class DistributionFunction {
+	public static class RatioDiffFunction {
 
 		private final ModelRepresentation rep;
 		private final VariableMap variableMap;
-		private final BigInteger totalCount;
+		private final BigDecimal totalCount;
 
-		public DistributionFunction(ModelRepresentation rep) {
+		public RatioDiffFunction(ModelRepresentation rep) {
 			this.rep = rep;
 			variableMap = rep.getFormula().getVariableMap();
 			final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-			totalCount = analysis.getResult(rep).orElseThrow();
+			totalCount = analysis.getResult(rep).map(BigDecimal::new).orElseThrow();
 		}
 
 		public double compute(SolutionList sample, ClauseList expression) {
@@ -54,15 +54,11 @@ public class DistributionMetrics extends AggregatableMetrics {
 			}
 			int positiveCount = 0;
 			for (final LiteralList solution : sample.getSolutions()) {
-				boolean covered = false;
 				for (final LiteralList clause : expression) {
 					if (solution.containsAll(clause)) {
-						covered = true;
+						positiveCount++;
 						break;
 					}
-				}
-				if (covered) {
-					positiveCount++;
 				}
 			}
 			final double sampleRatio = positiveCount / sampleSize;
@@ -71,21 +67,25 @@ public class DistributionMetrics extends AggregatableMetrics {
 			for (final LiteralList clause : expression) {
 				assumedConstraints.add(Clauses.toOrClause(clause.negate(), variableMap));
 			}
-			final double actualRatio = 1.0 / totalCount.divide(analysis.getResult(rep).orElseThrow()).doubleValue();
-
+			final BigDecimal negativeCount = analysis.getResult(rep)
+				.map(BigDecimal::new)
+				.orElseThrow();
+			final double actualRatio = 1 - negativeCount
+				.divide(totalCount, MathContext.DECIMAL128)
+				.doubleValue();
 			return Math.abs(actualRatio - sampleRatio);
 		}
 
 	}
 
-	private final DistributionFunction function;
+	private final RatioDiffFunction function;
 	private final List<ClauseList> expressionList;
 	private final String functionName;
 
 	public DistributionMetrics(ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
 		this.expressionList = expressionList;
 		this.functionName = functionName;
-		function = rep != null ? new DistributionFunction(rep) : null;
+		function = rep != null ? new RatioDiffFunction(rep) : null;
 	}
 
 	public static List<SampleMetric> getAllAggregates(ModelRepresentation rep,
