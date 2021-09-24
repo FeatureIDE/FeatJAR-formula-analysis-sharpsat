@@ -28,6 +28,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.Map.*;
 import java.util.concurrent.*;
+import java.util.stream.*;
 
 import org.spldev.formula.clauses.*;
 import org.spldev.formula.expression.*;
@@ -42,8 +43,25 @@ public class SharpSatSolver implements org.spldev.formula.solver.SharpSatSolver 
 
 	public static final BigInteger INVALID_COUNT = BigInteger.valueOf(-1);
 
+	private static final String OS_COMMAND = getOSCommand();
+
+	private static String getOSCommand() {
+		final String os = System.getProperty("os.name").toLowerCase().split("\\s+")[0];
+		switch (os) {
+		case "linux":
+			return "./libs/sharpSAT";
+		case "windows":
+			return "libs\\sharpSAT.exe";
+		default:
+			Logger.logError("Unsupported operating system " + os);
+			return null;
+		}
+	}
+
 	private SharpSatSolverFormula formula;
 	private VariableAssignment assumptions;
+
+	private final String[] command = new String[4];
 
 	private long timeout = 1_000_000;
 
@@ -52,52 +70,121 @@ public class SharpSatSolver implements org.spldev.formula.solver.SharpSatSolver 
 		formula = new SharpSatSolverFormula(variables);
 		modelFormula.getChildren().stream().map(c -> (Formula) c).forEach(formula::push);
 		assumptions = new VariableAssignment(variables);
+		command[0] = OS_COMMAND;
+		command[1] = "-noCC";
+		command[2] = "-noIBCP";
+	}
+
+	private CNF simplifyCNF(CNF cnf) {
+		final HashSet<Integer> unitClauses = new HashSet<>();
+		ArrayList<LiteralList> clauses = cnf.getClauses();
+		for (final LiteralList clause : clauses) {
+			if (clause.size() == 1) {
+				final int literal = clause.getLiterals()[0];
+				if (unitClauses.add(literal) && unitClauses.contains(-literal)) {
+					return null;
+				}
+			}
+		}
+		for (final Entry<Variable<?>, Object> entry : assumptions.getAllEntries()) {
+			final int variable = entry.getKey().getIndex();
+			final int literal = (entry.getValue() == Boolean.TRUE) ? variable : -variable;
+			if (unitClauses.add(literal) && unitClauses.contains(-literal)) {
+				return null;
+			}
+		}
+		if (!unitClauses.isEmpty()) {
+			final VariableMap variables = cnf.getVariables();
+			int unitClauseCount = 0;
+			while (unitClauseCount != unitClauses.size()) {
+				unitClauseCount = unitClauses.size();
+				if (unitClauseCount == variables.size()) {
+					return new CNF(VariableMap.emptyMap());
+				}
+				final ArrayList<LiteralList> nonUnitClauses = new ArrayList<>();
+				clauseLoop: for (final LiteralList clause : clauses) {
+					if (clause.size() > 1) {
+						int[] literals = clause.getLiterals();
+						int deadLiterals = 0;
+						for (int i = 0; i < literals.length; i++) {
+							final int literal = literals[i];
+							if (unitClauses.contains(literal)) {
+								literals = null;
+								continue clauseLoop;
+							} else if (unitClauses.contains(-literal)) {
+								deadLiterals++;
+							}
+						}
+						if (deadLiterals > 0) {
+							final int[] newLiterals = new int[literals.length - deadLiterals];
+							for (int i = 0, j = 0; j < newLiterals.length; i++) {
+								final int literal = literals[i];
+								if (!unitClauses.contains(-literal)) {
+									newLiterals[j++] = literal;
+								}
+							}
+							if (newLiterals.length > 1) {
+								nonUnitClauses.add(new LiteralList(newLiterals, clause.getOrder(), false));
+							} else if (newLiterals.length == 1) {
+								final int literal = newLiterals[0];
+								if (unitClauses.add(literal) && unitClauses.contains(-literal)) {
+									return null;
+								}
+							} else {
+								return null;
+							}
+						} else {
+							nonUnitClauses.add(clause);
+						}
+					}
+				}
+				clauses = nonUnitClauses;
+			}
+			final Set<Integer> indexToRemove = unitClauses.stream().map(i -> Math.abs(i)).collect(Collectors.toSet());
+			final VariableMap newVariables = VariableMap.withoutIndexes(variables, indexToRemove);
+			if (clauses.isEmpty()) {
+				return new CNF(newVariables);
+			}
+			cnf = new CNF(variables, clauses).adapt(newVariables).orElseThrow();
+		}
+		return cnf;
 	}
 
 	@Override
 	public BigInteger countSolutions() {
 		try {
-			final CNF cnf = formula.getCNF();
-			for (final Entry<Variable<?>, Object> entry : assumptions.getAllEntries()) {
-				final int variable = entry.getKey().getIndex();
-				cnf.addClause(new LiteralList((entry.getValue() == Boolean.TRUE) ? variable : -variable));
+			final CNF cnf = simplifyCNF(formula.getCNF());
+			if (cnf == null) {
+				return BigInteger.ZERO;
+			}
+			if (cnf.getClauses().isEmpty()) {
+				return BigInteger.valueOf(2).pow(cnf.getVariables().size());
 			}
 			final Path tempFile = Files.createTempFile("sharpSATinput", ".dimacs");
-			FileHandler.save(cnf, tempFile, new DIMACSFormatCNF());
-
-			final List<String> command = new ArrayList<>(5);
-			final String os = System.getProperty("os.name").toLowerCase().split("\\s+")[0];
-			switch (os) {
-			case "linux":
-				command.add("./libs/sharpSAT");
-				break;
-			case "windows":
-				command.add("libs\\sharpSAT.exe");
-				break;
-			default:
-				Logger.logError("Unsupported operating system " + os);
-				return INVALID_COUNT;
-			}
-			command.add("-noPP");
-			command.add("-noCC");
-			command.add("-noIBCP");
-			command.add(tempFile.toString());
-
-			final ProcessBuilder processBuilder = new ProcessBuilder(command);
-			Process process = null;
 			try {
-				process = processBuilder.start();
-				final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				if (process.waitFor(timeout, TimeUnit.MILLISECONDS)) {
-					process = null;
-					return reader.lines().findFirst().map(BigInteger::new).orElse(BigInteger.ZERO);
-				} else {
-					return INVALID_COUNT;
+				FileHandler.save(cnf, tempFile, new DIMACSFormatCNF());
+
+				command[command.length - 1] = tempFile.toString();
+				final ProcessBuilder processBuilder = new ProcessBuilder(command);
+				Process process = null;
+				try {
+					process = processBuilder.start();
+					final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+					if (process.waitFor(timeout, TimeUnit.MILLISECONDS)) {
+						process = null;
+						final BigInteger result = reader.lines().findFirst().map(BigInteger::new).orElse(
+							BigInteger.ZERO);
+						return result;
+					} else {
+						return INVALID_COUNT;
+					}
+				} finally {
+					if (process != null) {
+						process.destroyForcibly();
+					}
 				}
 			} finally {
-				if (process != null) {
-					process.destroyForcibly();
-				}
+				Files.deleteIfExists(tempFile);
 			}
 		} catch (final Exception e) {
 			Logger.logError(e);

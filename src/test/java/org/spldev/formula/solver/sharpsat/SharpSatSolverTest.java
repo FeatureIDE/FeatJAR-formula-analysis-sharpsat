@@ -109,7 +109,7 @@ public class SharpSatSolverTest {
 
 			for (final ClauseList expression : expressions) {
 				final double diff = ratioDiffFunction.compute(sample, expression);
-				assertEquals(diff, 0, 0.000_000_000_000_1, modelName);
+				assertEquals(diff, 0, 0.000_000_000_000_1, modelName + " | " + String.valueOf(expression));
 			}
 		}
 	}
