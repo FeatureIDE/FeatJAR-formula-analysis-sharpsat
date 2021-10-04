@@ -58,12 +58,12 @@ public class SharpSatSolver implements org.spldev.formula.solver.SharpSatSolver 
 		}
 	}
 
-	private SharpSatSolverFormula formula;
-	private VariableAssignment assumptions;
+	private final SharpSatSolverFormula formula;
+	private final VariableAssignment assumptions;
 
-	private final String[] command = new String[4];
+	private final String[] command = new String[6];
 
-	private long timeout = 1_000_000;
+	private long timeout = 0;
 
 	public SharpSatSolver(Formula modelFormula) {
 		final VariableMap variables = VariableMap.fromExpression(modelFormula);
@@ -73,6 +73,8 @@ public class SharpSatSolver implements org.spldev.formula.solver.SharpSatSolver 
 		command[0] = OS_COMMAND;
 		command[1] = "-noCC";
 		command[2] = "-noIBCP";
+		command[3] = "-t";
+		command[4] = String.valueOf(timeout);
 	}
 
 	private CNF simplifyCNF(CNF cnf) {
@@ -170,7 +172,8 @@ public class SharpSatSolver implements org.spldev.formula.solver.SharpSatSolver 
 				try {
 					process = processBuilder.start();
 					final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-					if (process.waitFor(timeout, TimeUnit.MILLISECONDS)) {
+					int exitValue = process.waitFor();
+					if (exitValue == 0) {
 						process = null;
 						final BigInteger result = reader.lines().findFirst().map(BigInteger::new).orElse(
 							BigInteger.ZERO);
