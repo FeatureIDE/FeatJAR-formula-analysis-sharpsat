@@ -35,9 +35,15 @@ import org.spldev.formula.solver.sharpsat.*;
  */
 public abstract class SharpSatSolverAnalysis<T> extends AbstractAnalysis<T, SharpSatSolver, Formula> {
 
+	protected int timeout = 30;
+
 	public SharpSatSolverAnalysis() {
 		super();
 		solverInputProvider = FormulaProvider.empty();
+	}
+
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
 	}
 
 	@Override
@@ -48,7 +54,7 @@ public abstract class SharpSatSolverAnalysis<T> extends AbstractAnalysis<T, Shar
 	@Override
 	protected void prepareSolver(SharpSatSolver solver) {
 		super.prepareSolver(solver);
-		solver.setTimeout(30);
+		solver.setTimeout(timeout);
 	}
 
 }
