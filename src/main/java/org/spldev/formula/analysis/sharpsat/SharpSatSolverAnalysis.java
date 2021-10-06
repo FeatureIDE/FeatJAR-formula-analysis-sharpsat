@@ -45,4 +45,10 @@ public abstract class SharpSatSolverAnalysis<T> extends AbstractAnalysis<T, Shar
 		return new SharpSatSolver(input);
 	}
 
+	@Override
+	protected void prepareSolver(SharpSatSolver solver) {
+		super.prepareSolver(solver);
+		solver.setTimeout(30);
+	}
+
 }
