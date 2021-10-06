@@ -27,7 +27,6 @@ import java.math.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.Map.*;
-import java.util.concurrent.*;
 import java.util.stream.*;
 
 import org.spldev.formula.clauses.*;
@@ -172,7 +171,7 @@ public class SharpSatSolver implements org.spldev.formula.solver.SharpSatSolver 
 				try {
 					process = processBuilder.start();
 					final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-					int exitValue = process.waitFor();
+					final int exitValue = process.waitFor();
 					if (exitValue == 0) {
 						process = null;
 						final BigInteger result = reader.lines().findFirst().map(BigInteger::new).orElse(
