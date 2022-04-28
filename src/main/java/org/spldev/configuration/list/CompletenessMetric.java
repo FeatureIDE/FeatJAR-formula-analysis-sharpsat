@@ -20,41 +20,44 @@
  * See <https://github.com/skrieter/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.formula.analysis.sharpsat;
+package org.spldev.configuration.list;
 
-import org.spldev.formula.analysis.*;
-import org.spldev.formula.expression.*;
-import org.spldev.formula.solver.sharpsat.*;
+import java.math.*;
+
+import org.spldev.analysis.sharpsat.*;
+import org.spldev.clauses.solutions.*;
+import org.spldev.clauses.solutions.metrics.*;
+import org.spldev.formula.*;
 
 /**
- * Base class for analyses using a {@link SharpSatSolver}.
- *
- * @param <T> Type of the analysis result.
+ * Computes the ratio of configuration space covered by a configuration sample.
  *
  * @author Sebastian Krieter
  */
-public abstract class SharpSatSolverAnalysis<T> extends AbstractAnalysis<T, SharpSatSolver, Formula> {
+public class CompletenessMetric implements SampleMetric {
 
-	protected int timeout = 30;
+	private ModelRepresentation rep;
 
-	public SharpSatSolverAnalysis() {
-		super();
-		solverInputProvider = FormulaProvider.empty();
-	}
-
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
+	public CompletenessMetric(ModelRepresentation rep) {
+		this.rep = rep;
 	}
 
 	@Override
-	protected SharpSatSolver createSolver(Formula input) {
-		return new SharpSatSolver(input);
+	public double get(SolutionList sample) {
+		final BigDecimal totalSize = new CountSolutionsAnalysis() //
+			.getResult(rep) //
+			.map(BigDecimal::new) //
+			.orElseThrow();
+		return totalSize.signum() > 0 //
+			? new BigDecimal(sample.getSolutions().size()) //
+				.divide(totalSize, MathContext.DECIMAL128) //
+				.doubleValue()
+			: 0;
 	}
 
 	@Override
-	protected void prepareSolver(SharpSatSolver solver) {
-		super.prepareSolver(solver);
-		solver.setTimeout(timeout);
+	public String getName() {
+		return "Completeness";
 	}
 
 }

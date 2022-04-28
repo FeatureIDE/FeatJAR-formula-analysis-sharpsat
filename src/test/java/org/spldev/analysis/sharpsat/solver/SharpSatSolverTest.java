@@ -20,7 +20,7 @@
  * See <https://github.com/skrieter/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.formula.solver.sharpsat;
+package org.spldev.analysis.sharpsat.solver;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,17 +29,13 @@ import java.nio.file.*;
 import java.util.*;
 
 import org.junit.jupiter.api.*;
+import org.spldev.analysis.sharpsat.*;
 import org.spldev.formula.*;
-import org.spldev.formula.analysis.sat4j.*;
-import org.spldev.formula.analysis.sat4j.twise.*;
-import org.spldev.formula.analysis.sharpsat.CountSolutionsAnalysis;
-import org.spldev.formula.clauses.*;
-import org.spldev.formula.configuration.sample.DistributionMetrics.*;
-import org.spldev.formula.expression.*;
-import org.spldev.formula.expression.atomic.literal.*;
-import org.spldev.formula.expression.compound.*;
-import org.spldev.formula.expression.term.bool.*;
-import org.spldev.util.data.Result;
+import org.spldev.formula.structure.*;
+import org.spldev.formula.structure.atomic.literal.*;
+import org.spldev.formula.structure.compound.*;
+import org.spldev.formula.structure.term.bool.*;
+import org.spldev.util.data.*;
 import org.spldev.util.extension.*;
 import org.spldev.util.logging.*;
 
@@ -95,23 +91,6 @@ public class SharpSatSolverTest {
 		result.orElse(Logger::logProblems);
 		assertTrue(result.isPresent());
 		assertEquals(BigInteger.valueOf(960), result.get());
-	}
-
-	@Test
-	public void distribution() {
-		for (final String modelName : modelNames.subList(0, 4)) {
-			final ModelRepresentation rep = load(modelDirectory.resolve(modelName + ".xml"));
-			final RatioDiffFunction ratioDiffFunction = new RatioDiffFunction(rep);
-
-			final SolutionList sample = new AllConfigurationGenerator().getResult(rep).orElseThrow();
-			final List<ClauseList> expressions = TWiseConfigurationGenerator.convertLiterals(Clauses.getLiterals(
-				rep.getVariables())).get(0);
-
-			for (final ClauseList expression : expressions) {
-				final double diff = ratioDiffFunction.compute(sample, expression);
-				assertEquals(diff, 0, 0.000_000_000_000_1, modelName + " | " + String.valueOf(expression));
-			}
-		}
 	}
 
 }

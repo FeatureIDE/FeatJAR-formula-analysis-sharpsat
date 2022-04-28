@@ -20,7 +20,7 @@
  * See <https://github.com/skrieter/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.formula.solver.sharpsat;
+package org.spldev.analysis.sharpsat.solver;
 
 import java.io.*;
 import java.math.*;
@@ -29,16 +29,16 @@ import java.util.*;
 import java.util.Map.*;
 import java.util.stream.*;
 
-import org.spldev.formula.clauses.*;
-import org.spldev.formula.expression.*;
-import org.spldev.formula.expression.atomic.*;
-import org.spldev.formula.expression.atomic.literal.*;
-import org.spldev.formula.expression.term.*;
-import org.spldev.formula.io.*;
+import org.spldev.clauses.*;
+import org.spldev.formula.io.dimacs.*;
+import org.spldev.formula.structure.*;
+import org.spldev.formula.structure.atomic.*;
+import org.spldev.formula.structure.atomic.literal.*;
+import org.spldev.formula.structure.term.*;
 import org.spldev.util.io.*;
 import org.spldev.util.logging.*;
 
-public class SharpSatSolver implements org.spldev.formula.solver.SharpSatSolver {
+public class SharpSatSolver implements org.spldev.analysis.solver.SharpSatSolver {
 
 	public static final BigInteger INVALID_COUNT = BigInteger.valueOf(-1);
 

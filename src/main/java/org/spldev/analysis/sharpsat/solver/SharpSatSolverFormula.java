@@ -20,30 +20,40 @@
  * See <https://github.com/skrieter/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.formula.analysis.sharpsat;
+package org.spldev.analysis.sharpsat.solver;
 
-import org.spldev.formula.solver.SatSolver.*;
-import org.spldev.formula.solver.sharpsat.*;
-import org.spldev.util.data.*;
-import org.spldev.util.job.*;
+import java.util.*;
+
+import org.spldev.analysis.solver.*;
+import org.spldev.clauses.*;
+import org.spldev.formula.structure.*;
+import org.spldev.formula.structure.atomic.literal.*;
 
 /**
- * Counts the number of valid solutions to a formula.
- * 
+ * Formula for {@link SharpSatSolver}.
+ *
  * @author Sebastian Krieter
  */
-public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SatResult> {
+public class SharpSatSolverFormula extends AbstractDynamicFormula<LiteralList> {
 
-	public static final Identifier<SatResult> identifier = new Identifier<>();
-
-	@Override
-	public Identifier<SatResult> getIdentifier() {
-		return identifier;
+	public SharpSatSolverFormula(VariableMap variableMap) {
+		super(variableMap);
 	}
 
 	@Override
-	protected SatResult analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
-		return solver.hasSolution();
+	public List<LiteralList> push(Formula formula) throws RuntimeContradictionException {
+		final ClauseList clauses = FormulaToCNF.convert(formula, variableMap).getClauses();
+		clauses.forEach(constraints::add);
+		return clauses;
+	}
+
+	@Override
+	public void clear() {
+		constraints.clear();
+	}
+
+	public CNF getCNF() {
+		return new CNF(variableMap, constraints);
 	}
 
 }

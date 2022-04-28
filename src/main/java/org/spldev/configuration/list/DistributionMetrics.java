@@ -20,17 +20,19 @@
  * See <https://github.com/skrieter/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.formula.configuration.sample;
+package org.spldev.configuration.list;
 
 import java.math.*;
 import java.util.*;
 import java.util.function.*;
 
+import org.spldev.analysis.sharpsat.*;
+import org.spldev.clauses.*;
+import org.spldev.clauses.solutions.*;
+import org.spldev.clauses.solutions.metrics.*;
 import org.spldev.formula.*;
-import org.spldev.formula.analysis.sharpsat.*;
-import org.spldev.formula.clauses.*;
-import org.spldev.formula.expression.*;
-import org.spldev.formula.expression.atomic.literal.*;
+import org.spldev.formula.structure.*;
+import org.spldev.formula.structure.atomic.literal.*;
 
 public class DistributionMetrics extends AggregatableMetrics {
 

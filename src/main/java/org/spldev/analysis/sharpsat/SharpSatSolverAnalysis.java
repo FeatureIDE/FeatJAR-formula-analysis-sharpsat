@@ -20,31 +20,41 @@
  * See <https://github.com/skrieter/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.formula.analysis.sharpsat;
+package org.spldev.analysis.sharpsat;
 
-import java.math.*;
-
-import org.spldev.formula.solver.sharpsat.*;
-import org.spldev.util.data.*;
-import org.spldev.util.job.*;
+import org.spldev.analysis.*;
+import org.spldev.analysis.sharpsat.solver.*;
+import org.spldev.formula.structure.*;
 
 /**
- * Counts the number of valid solutions to a formula.
- * 
+ * Base class for analyses using a {@link SharpSatSolver}.
+ *
+ * @param <T> Type of the analysis result.
+ *
  * @author Sebastian Krieter
  */
-public class CountSolutionsAnalysis extends SharpSatSolverAnalysis<BigInteger> {
+public abstract class SharpSatSolverAnalysis<T> extends AbstractAnalysis<T, SharpSatSolver, Formula> {
 
-	public static final Identifier<BigInteger> identifier = new Identifier<>();
+	protected int timeout = 30;
 
-	@Override
-	public Identifier<BigInteger> getIdentifier() {
-		return identifier;
+	public SharpSatSolverAnalysis() {
+		super();
+		solverInputProvider = FormulaProvider.empty();
+	}
+
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
 	}
 
 	@Override
-	protected BigInteger analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
-		return solver.countSolutions();
+	protected SharpSatSolver createSolver(Formula input) {
+		return new SharpSatSolver(input);
+	}
+
+	@Override
+	protected void prepareSolver(SharpSatSolver solver) {
+		super.prepareSolver(solver);
+		solver.setTimeout(timeout);
 	}
 
 }

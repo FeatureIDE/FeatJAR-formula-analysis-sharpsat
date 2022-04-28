@@ -20,43 +20,30 @@
  * See <https://github.com/skrieter/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.formula.configuration.sample;
+package org.spldev.analysis.sharpsat;
 
-import java.math.*;
-
-import org.spldev.formula.*;
-import org.spldev.formula.analysis.sharpsat.*;
-import org.spldev.formula.clauses.*;
+import org.spldev.analysis.sharpsat.solver.*;
+import org.spldev.analysis.solver.SatSolver.*;
+import org.spldev.util.data.*;
+import org.spldev.util.job.*;
 
 /**
- * Computes the ratio of configuration space covered by a configuration sample.
- *
+ * Counts the number of valid solutions to a formula.
+ * 
  * @author Sebastian Krieter
  */
-public class CompletenessMetric implements SampleMetric {
+public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SatResult> {
 
-	private ModelRepresentation rep;
+	public static final Identifier<SatResult> identifier = new Identifier<>();
 
-	public CompletenessMetric(ModelRepresentation rep) {
-		this.rep = rep;
+	@Override
+	public Identifier<SatResult> getIdentifier() {
+		return identifier;
 	}
 
 	@Override
-	public double get(SolutionList sample) {
-		final BigDecimal totalSize = new CountSolutionsAnalysis() //
-			.getResult(rep) //
-			.map(BigDecimal::new) //
-			.orElseThrow();
-		return totalSize.signum() > 0 //
-			? new BigDecimal(sample.getSolutions().size()) //
-				.divide(totalSize, MathContext.DECIMAL128) //
-				.doubleValue()
-			: 0;
-	}
-
-	@Override
-	public String getName() {
-		return "Completeness";
+	protected SatResult analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
+		return solver.hasSolution();
 	}
 
 }

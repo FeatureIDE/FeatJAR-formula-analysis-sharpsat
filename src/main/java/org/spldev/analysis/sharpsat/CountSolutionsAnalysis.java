@@ -20,40 +20,31 @@
  * See <https://github.com/skrieter/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.formula.solver.sharpsat;
+package org.spldev.analysis.sharpsat;
 
-import java.util.*;
+import java.math.*;
 
-import org.spldev.formula.clauses.*;
-import org.spldev.formula.expression.*;
-import org.spldev.formula.expression.atomic.literal.*;
-import org.spldev.formula.solver.*;
+import org.spldev.analysis.sharpsat.solver.*;
+import org.spldev.util.data.*;
+import org.spldev.util.job.*;
 
 /**
- * Formula for {@link SharpSatSolver}.
- *
+ * Counts the number of valid solutions to a formula.
+ * 
  * @author Sebastian Krieter
  */
-public class SharpSatSolverFormula extends AbstractDynamicFormula<LiteralList> {
+public class CountSolutionsAnalysis extends SharpSatSolverAnalysis<BigInteger> {
 
-	public SharpSatSolverFormula(VariableMap variableMap) {
-		super(variableMap);
+	public static final Identifier<BigInteger> identifier = new Identifier<>();
+
+	@Override
+	public Identifier<BigInteger> getIdentifier() {
+		return identifier;
 	}
 
 	@Override
-	public List<LiteralList> push(Formula formula) throws RuntimeContradictionException {
-		final ClauseList clauses = FormulaToCNF.convert(formula, variableMap).getClauses();
-		clauses.forEach(constraints::add);
-		return clauses;
-	}
-
-	@Override
-	public void clear() {
-		constraints.clear();
-	}
-
-	public CNF getCNF() {
-		return new CNF(variableMap, constraints);
+	protected BigInteger analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
+		return solver.countSolutions();
 	}
 
 }
