@@ -46,7 +46,7 @@ public class DistributionMetrics extends AggregatableMetrics {
 			this.rep = rep;
 			variableMap = rep.getFormula().getVariableMap();
 			final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-			totalCount = analysis.getResult(rep).map(BigDecimal::new).orElseThrow();
+			totalCount = rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
 		}
 
 		public double compute(SolutionList sample, ClauseList expression) {
@@ -69,7 +69,7 @@ public class DistributionMetrics extends AggregatableMetrics {
 			for (final LiteralList clause : expression) {
 				assumedConstraints.add(Clauses.toOrClause(clause.negate(), variableMap));
 			}
-			final BigDecimal negativeCount = analysis.getResult(rep)
+			final BigDecimal negativeCount = rep.getResult(analysis)
 				.map(BigDecimal::new)
 				.orElseThrow();
 			final double actualRatio = 1 - negativeCount

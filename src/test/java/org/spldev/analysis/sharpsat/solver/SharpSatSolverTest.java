@@ -76,7 +76,7 @@ public class SharpSatSolverTest {
 		final ModelRepresentation rep = new ModelRepresentation(cnfFormula);
 
 		final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-		final Result<?> result = analysis.getResult(rep);
+		final Result<?> result = rep.getResult(analysis);
 		result.orElse(Logger::logProblems);
 		assertTrue(result.isPresent());
 		assertEquals(BigInteger.valueOf(3), result.get());
@@ -87,7 +87,7 @@ public class SharpSatSolverTest {
 		final ModelRepresentation rep = load(modelDirectory.resolve(modelNames.get(3) + ".xml"));
 
 		final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-		final Result<?> result = analysis.getResult(rep);
+		final Result<?> result = rep.getResult(analysis);
 		result.orElse(Logger::logProblems);
 		assertTrue(result.isPresent());
 		assertEquals(BigInteger.valueOf(960), result.get());

@@ -44,8 +44,8 @@ public class CompletenessMetric implements SampleMetric {
 
 	@Override
 	public double get(SolutionList sample) {
-		final BigDecimal totalSize = new CountSolutionsAnalysis() //
-			.getResult(rep) //
+		final BigDecimal totalSize = rep //
+			.getResult(new CountSolutionsAnalysis()) //
 			.map(BigDecimal::new) //
 			.orElseThrow();
 		return totalSize.signum() > 0 //
