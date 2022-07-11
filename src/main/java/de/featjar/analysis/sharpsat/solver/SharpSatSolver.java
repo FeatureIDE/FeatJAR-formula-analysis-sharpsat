@@ -22,12 +22,13 @@
  */
 package de.featjar.analysis.sharpsat.solver;
 
-import java.io.*;
-import java.math.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.Map.*;
-import java.util.stream.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import de.featjar.clauses.CNF;
 import de.featjar.clauses.LiteralList;
@@ -36,15 +37,9 @@ import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.Assignment;
 import de.featjar.formula.structure.atomic.VariableAssignment;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
+import de.featjar.util.data.Pair;
+import de.featjar.util.io.IO;
 import de.featjar.util.logging.Logger;
-import de.featjar.clauses.*;
-import de.featjar.formula.io.dimacs.*;
-import de.featjar.formula.structure.*;
-import de.featjar.formula.structure.atomic.*;
-import de.featjar.formula.structure.atomic.literal.*;
-import de.featjar.formula.structure.term.*;
-import de.featjar.util.io.*;
-import de.featjar.util.logging.*;
 
 public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver {
 
@@ -73,7 +68,7 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 	private long timeout = 0;
 
 	public SharpSatSolver(Formula modelFormula) {
-		final VariableMap variables = VariableMap.fromExpression(modelFormula);
+		final VariableMap variables = modelFormula.getVariableMap().orElseGet(VariableMap::new);
 		formula = new SharpSatSolverFormula(variables);
 		modelFormula.getChildren().stream().map(c -> (Formula) c).forEach(formula::push);
 		assumptions = new VariableAssignment(variables);
@@ -95,20 +90,20 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 				}
 			}
 		}
-		for (final Entry<Variable<?>, Object> entry : assumptions.getAllEntries()) {
-			final int variable = entry.getKey().getIndex();
+		for (final Pair<Integer, Object> entry : assumptions.getAll()) {
+			final int variable = entry.getKey();
 			final int literal = (entry.getValue() == Boolean.TRUE) ? variable : -variable;
 			if (unitClauses.add(literal) && unitClauses.contains(-literal)) {
 				return null;
 			}
 		}
 		if (!unitClauses.isEmpty()) {
-			final VariableMap variables = cnf.getVariables();
+			final VariableMap variables = cnf.getVariableMap();
 			int unitClauseCount = 0;
 			while (unitClauseCount != unitClauses.size()) {
 				unitClauseCount = unitClauses.size();
-				if (unitClauseCount == variables.size()) {
-					return new CNF(VariableMap.emptyMap());
+				if (unitClauseCount == variables.getVariableCount()) {
+					return new CNF(new VariableMap());
 				}
 				final ArrayList<LiteralList> nonUnitClauses = new ArrayList<>();
 				clauseLoop: for (final LiteralList clause : clauses) {
@@ -149,8 +144,10 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 				}
 				clauses = nonUnitClauses;
 			}
-			final Set<Integer> indexToRemove = unitClauses.stream().map(i -> Math.abs(i)).collect(Collectors.toSet());
-			final VariableMap newVariables = VariableMap.withoutIndexes(variables, indexToRemove);
+
+			final VariableMap newVariables = variables.clone();
+			unitClauses.stream().map(i -> Math.abs(i)).forEach(newVariables::removeVariable);
+
 			if (clauses.isEmpty()) {
 				return new CNF(newVariables);
 			}
@@ -167,11 +164,11 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 				return BigInteger.ZERO;
 			}
 			if (cnf.getClauses().isEmpty()) {
-				return BigInteger.valueOf(2).pow(cnf.getVariables().size());
+				return BigInteger.valueOf(2).pow(cnf.getVariableMap().getVariableCount());
 			}
 			final Path tempFile = Files.createTempFile("sharpSATinput", ".dimacs");
 			try {
-				FileHandler.save(cnf, tempFile, new DIMACSFormatCNF());
+				IO.save(cnf, tempFile, new DIMACSFormatCNF());
 
 				command[command.length - 1] = tempFile.toString();
 				final ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -182,8 +179,8 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 					final int exitValue = process.waitFor();
 					if (exitValue == 0) {
 						process = null;
-						final BigInteger result = reader.lines().findFirst().map(BigInteger::new).orElse(
-							BigInteger.ZERO);
+						final BigInteger result = reader.lines().findFirst().map(BigInteger::new)
+								.orElse(BigInteger.ZERO);
 						return result;
 					} else {
 						return INVALID_COUNT;

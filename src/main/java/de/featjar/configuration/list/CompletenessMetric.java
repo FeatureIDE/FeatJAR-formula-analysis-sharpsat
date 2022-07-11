@@ -22,16 +22,13 @@
  */
 package de.featjar.configuration.list;
 
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.clauses.solutions.SolutionList;
 import de.featjar.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.ModelRepresentation;
-import de.featjar.analysis.sharpsat.*;
-import de.featjar.clauses.solutions.*;
-import de.featjar.clauses.solutions.metrics.*;
-import de.featjar.formula.*;
 
 /**
  * Computes the ratio of configuration space covered by a configuration sample.

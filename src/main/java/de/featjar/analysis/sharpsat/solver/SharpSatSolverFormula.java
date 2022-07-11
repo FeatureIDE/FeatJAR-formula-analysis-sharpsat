@@ -22,7 +22,7 @@
  */
 package de.featjar.analysis.sharpsat.solver;
 
-import java.util.*;
+import java.util.List;
 
 import de.featjar.analysis.solver.AbstractDynamicFormula;
 import de.featjar.analysis.solver.RuntimeContradictionException;
@@ -32,10 +32,6 @@ import de.featjar.clauses.FormulaToCNF;
 import de.featjar.clauses.LiteralList;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
-import de.featjar.analysis.solver.*;
-import de.featjar.clauses.*;
-import de.featjar.formula.structure.*;
-import de.featjar.formula.structure.atomic.literal.*;
 
 /**
  * Formula for {@link SharpSatSolver}.

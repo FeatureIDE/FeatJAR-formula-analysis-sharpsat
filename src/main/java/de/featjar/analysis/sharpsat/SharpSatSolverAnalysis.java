@@ -26,9 +26,6 @@ import de.featjar.analysis.AbstractAnalysis;
 import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.FormulaProvider;
-import de.featjar.analysis.*;
-import de.featjar.analysis.sharpsat.solver.*;
-import de.featjar.formula.structure.*;
 
 /**
  * Base class for analyses using a {@link SharpSatSolver}.

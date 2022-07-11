@@ -22,9 +22,10 @@
  */
 package de.featjar.configuration.list;
 
-import java.math.*;
-import java.util.*;
-import java.util.function.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.List;
+import java.util.function.DoubleSupplier;
 
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.clauses.ClauseList;
@@ -36,13 +37,6 @@ import de.featjar.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.ModelRepresentation;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
-import de.featjar.analysis.sharpsat.*;
-import de.featjar.clauses.*;
-import de.featjar.clauses.solutions.*;
-import de.featjar.clauses.solutions.metrics.*;
-import de.featjar.formula.*;
-import de.featjar.formula.structure.*;
-import de.featjar.formula.structure.atomic.literal.*;
 
 public class DistributionMetrics extends AggregatableMetrics {
 
@@ -54,7 +48,7 @@ public class DistributionMetrics extends AggregatableMetrics {
 
 		public RatioDiffFunction(ModelRepresentation rep) {
 			this.rep = rep;
-			variableMap = rep.getFormula().getVariableMap();
+			variableMap = rep.getFormula().getVariableMap().orElseGet(VariableMap::new);
 			final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
 			totalCount = rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
 		}
