@@ -20,31 +20,48 @@
  * See <https://github.com/FeatJAR/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.analysis.sharpsat;
+package de.featjar.analysis.sharpsat.solver;
 
-import java.math.*;
+import java.util.*;
 
-import org.spldev.analysis.sharpsat.solver.*;
-import org.spldev.util.data.*;
-import org.spldev.util.job.*;
+import de.featjar.analysis.solver.AbstractDynamicFormula;
+import de.featjar.analysis.solver.RuntimeContradictionException;
+import de.featjar.clauses.CNF;
+import de.featjar.clauses.ClauseList;
+import de.featjar.clauses.FormulaToCNF;
+import de.featjar.clauses.LiteralList;
+import de.featjar.formula.structure.Formula;
+import de.featjar.formula.structure.atomic.literal.VariableMap;
+import de.featjar.analysis.solver.*;
+import de.featjar.clauses.*;
+import de.featjar.formula.structure.*;
+import de.featjar.formula.structure.atomic.literal.*;
 
 /**
- * Counts the number of valid solutions to a formula.
- * 
+ * Formula for {@link SharpSatSolver}.
+ *
  * @author Sebastian Krieter
  */
-public class CountSolutionsAnalysis extends SharpSatSolverAnalysis<BigInteger> {
+public class SharpSatSolverFormula extends AbstractDynamicFormula<LiteralList> {
 
-	public static final Identifier<BigInteger> identifier = new Identifier<>();
-
-	@Override
-	public Identifier<BigInteger> getIdentifier() {
-		return identifier;
+	public SharpSatSolverFormula(VariableMap variableMap) {
+		super(variableMap);
 	}
 
 	@Override
-	protected BigInteger analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
-		return solver.countSolutions();
+	public List<LiteralList> push(Formula formula) throws RuntimeContradictionException {
+		final ClauseList clauses = FormulaToCNF.convert(formula, variableMap).getClauses();
+		clauses.forEach(constraints::add);
+		return clauses;
+	}
+
+	@Override
+	public void clear() {
+		constraints.clear();
+	}
+
+	public CNF getCNF() {
+		return new CNF(variableMap, constraints);
 	}
 
 }

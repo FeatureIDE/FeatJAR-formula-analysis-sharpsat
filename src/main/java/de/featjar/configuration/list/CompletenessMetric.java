@@ -20,30 +20,48 @@
  * See <https://github.com/FeatJAR/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.analysis.sharpsat;
+package de.featjar.configuration.list;
 
-import org.spldev.analysis.sharpsat.solver.*;
-import org.spldev.analysis.solver.SatSolver.*;
-import org.spldev.util.data.*;
-import org.spldev.util.job.*;
+import java.math.*;
+
+import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
+import de.featjar.clauses.solutions.SolutionList;
+import de.featjar.clauses.solutions.metrics.SampleMetric;
+import de.featjar.formula.ModelRepresentation;
+import de.featjar.analysis.sharpsat.*;
+import de.featjar.clauses.solutions.*;
+import de.featjar.clauses.solutions.metrics.*;
+import de.featjar.formula.*;
 
 /**
- * Counts the number of valid solutions to a formula.
- * 
+ * Computes the ratio of configuration space covered by a configuration sample.
+ *
  * @author Sebastian Krieter
  */
-public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SatResult> {
+public class CompletenessMetric implements SampleMetric {
 
-	public static final Identifier<SatResult> identifier = new Identifier<>();
+	private ModelRepresentation rep;
 
-	@Override
-	public Identifier<SatResult> getIdentifier() {
-		return identifier;
+	public CompletenessMetric(ModelRepresentation rep) {
+		this.rep = rep;
 	}
 
 	@Override
-	protected SatResult analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
-		return solver.hasSolution();
+	public double get(SolutionList sample) {
+		final BigDecimal totalSize = rep //
+			.getResult(new CountSolutionsAnalysis()) //
+			.map(BigDecimal::new) //
+			.orElseThrow();
+		return totalSize.signum() > 0 //
+			? new BigDecimal(sample.getSolutions().size()) //
+				.divide(totalSize, MathContext.DECIMAL128) //
+				.doubleValue()
+			: 0;
+	}
+
+	@Override
+	public String getName() {
+		return "Completeness";
 	}
 
 }

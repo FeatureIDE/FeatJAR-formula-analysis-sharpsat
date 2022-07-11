@@ -20,7 +20,7 @@
  * See <https://github.com/FeatJAR/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.analysis.sharpsat.solver;
+package de.featjar.analysis.sharpsat.solver;
 
 import java.io.*;
 import java.math.*;
@@ -29,16 +29,24 @@ import java.util.*;
 import java.util.Map.*;
 import java.util.stream.*;
 
-import org.spldev.clauses.*;
-import org.spldev.formula.io.dimacs.*;
-import org.spldev.formula.structure.*;
-import org.spldev.formula.structure.atomic.*;
-import org.spldev.formula.structure.atomic.literal.*;
-import org.spldev.formula.structure.term.*;
-import org.spldev.util.io.*;
-import org.spldev.util.logging.*;
+import de.featjar.clauses.CNF;
+import de.featjar.clauses.LiteralList;
+import de.featjar.formula.io.dimacs.DIMACSFormatCNF;
+import de.featjar.formula.structure.Formula;
+import de.featjar.formula.structure.atomic.Assignment;
+import de.featjar.formula.structure.atomic.VariableAssignment;
+import de.featjar.formula.structure.atomic.literal.VariableMap;
+import de.featjar.util.logging.Logger;
+import de.featjar.clauses.*;
+import de.featjar.formula.io.dimacs.*;
+import de.featjar.formula.structure.*;
+import de.featjar.formula.structure.atomic.*;
+import de.featjar.formula.structure.atomic.literal.*;
+import de.featjar.formula.structure.term.*;
+import de.featjar.util.io.*;
+import de.featjar.util.logging.*;
 
-public class SharpSatSolver implements org.spldev.analysis.solver.SharpSatSolver {
+public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver {
 
 	public static final BigInteger INVALID_COUNT = BigInteger.valueOf(-1);
 

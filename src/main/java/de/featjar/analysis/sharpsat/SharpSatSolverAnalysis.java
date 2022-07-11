@@ -20,11 +20,15 @@
  * See <https://github.com/FeatJAR/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.analysis.sharpsat;
+package de.featjar.analysis.sharpsat;
 
-import org.spldev.analysis.*;
-import org.spldev.analysis.sharpsat.solver.*;
-import org.spldev.formula.structure.*;
+import de.featjar.analysis.AbstractAnalysis;
+import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
+import de.featjar.formula.structure.Formula;
+import de.featjar.formula.structure.FormulaProvider;
+import de.featjar.analysis.*;
+import de.featjar.analysis.sharpsat.solver.*;
+import de.featjar.formula.structure.*;
 
 /**
  * Base class for analyses using a {@link SharpSatSolver}.

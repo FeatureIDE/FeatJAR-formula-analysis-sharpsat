@@ -20,19 +20,29 @@
  * See <https://github.com/FeatJAR/formula-analysis-sharpsat> for further information.
  * -----------------------------------------------------------------------------
  */
-package org.spldev.configuration.list;
+package de.featjar.configuration.list;
 
 import java.math.*;
 import java.util.*;
 import java.util.function.*;
 
-import org.spldev.analysis.sharpsat.*;
-import org.spldev.clauses.*;
-import org.spldev.clauses.solutions.*;
-import org.spldev.clauses.solutions.metrics.*;
-import org.spldev.formula.*;
-import org.spldev.formula.structure.*;
-import org.spldev.formula.structure.atomic.literal.*;
+import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
+import de.featjar.clauses.ClauseList;
+import de.featjar.clauses.Clauses;
+import de.featjar.clauses.LiteralList;
+import de.featjar.clauses.solutions.SolutionList;
+import de.featjar.clauses.solutions.metrics.AggregatableMetrics;
+import de.featjar.clauses.solutions.metrics.SampleMetric;
+import de.featjar.formula.ModelRepresentation;
+import de.featjar.formula.structure.Formula;
+import de.featjar.formula.structure.atomic.literal.VariableMap;
+import de.featjar.analysis.sharpsat.*;
+import de.featjar.clauses.*;
+import de.featjar.clauses.solutions.*;
+import de.featjar.clauses.solutions.metrics.*;
+import de.featjar.formula.*;
+import de.featjar.formula.structure.*;
+import de.featjar.formula.structure.atomic.literal.*;
 
 public class DistributionMetrics extends AggregatableMetrics {
 
@@ -91,7 +101,7 @@ public class DistributionMetrics extends AggregatableMetrics {
 	}
 
 	public static List<SampleMetric> getAllAggregates(ModelRepresentation rep,
-		List<ClauseList> expressionList, String functionName) {
+                                                      List<ClauseList> expressionList, String functionName) {
 		return new DistributionMetrics(rep, expressionList, functionName).getAllAggregates();
 	}
 
