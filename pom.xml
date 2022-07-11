@@ -58,7 +58,7 @@
 				<executions>
 					<execution>
 						<id>copy-dependency</id>
-						<phase>validate</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -66,7 +66,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>de.featjar</groupId>
-									<artifactId>sharpsat-native</artifactId>
+									<artifactId>native-sharpsat</artifactId>
 									<classifier>binary</classifier>
 									<type>tar.gz</type>
 									<overWrite>true</overWrite>
@@ -84,7 +84,7 @@
 				<executions>
 					<execution>
 						<id>copy-resources</id>
-						<phase>validate</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
