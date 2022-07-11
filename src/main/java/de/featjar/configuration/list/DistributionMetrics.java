@@ -95,7 +95,7 @@ public class DistributionMetrics extends AggregatableMetrics {
 	}
 
 	public static List<SampleMetric> getAllAggregates(ModelRepresentation rep,
-                                                      List<ClauseList> expressionList, String functionName) {
+		List<ClauseList> expressionList, String functionName) {
 		return new DistributionMetrics(rep, expressionList, functionName).getAllAggregates();
 	}
 

@@ -180,7 +180,7 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 					if (exitValue == 0) {
 						process = null;
 						final BigInteger result = reader.lines().findFirst().map(BigInteger::new)
-								.orElse(BigInteger.ZERO);
+							.orElse(BigInteger.ZERO);
 						return result;
 					} else {
 						return INVALID_COUNT;
