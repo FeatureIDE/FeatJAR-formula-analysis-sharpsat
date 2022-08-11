@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import de.featjar.bin.sharpsat.SharpSatBinary;
 import de.featjar.clauses.CNF;
 import de.featjar.clauses.LiteralList;
 import de.featjar.formula.io.dimacs.DIMACSFormatCNF;
@@ -37,6 +38,7 @@ import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.Assignment;
 import de.featjar.formula.structure.atomic.VariableAssignment;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
+import de.featjar.util.bin.JAR;
 import de.featjar.util.data.Pair;
 import de.featjar.util.io.IO;
 import de.featjar.util.logging.Logger;
@@ -44,21 +46,6 @@ import de.featjar.util.logging.Logger;
 public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver {
 
 	public static final BigInteger INVALID_COUNT = BigInteger.valueOf(-1);
-
-	private static final String OS_COMMAND = getOSCommand();
-
-	private static String getOSCommand() {
-		final String os = System.getProperty("os.name").toLowerCase().split("\\s+")[0];
-		switch (os) {
-		case "linux":
-			return "./libs/sharpSAT";
-		case "windows":
-			return "libs\\sharpSAT.exe";
-		default:
-			Logger.logError("Unsupported operating system " + os);
-			return null;
-		}
-	}
 
 	private final SharpSatSolverFormula formula;
 	private final VariableAssignment assumptions;
@@ -72,7 +59,7 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 		formula = new SharpSatSolverFormula(variables);
 		modelFormula.getChildren().stream().map(c -> (Formula) c).forEach(formula::push);
 		assumptions = new VariableAssignment(variables);
-		command[0] = OS_COMMAND;
+		command[0] = new SharpSatBinary().getPath().toString();
 		command[1] = "-noCC";
 		command[2] = "-noIBCP";
 		command[3] = "-t";
