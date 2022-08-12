@@ -38,7 +38,6 @@ import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.Assignment;
 import de.featjar.formula.structure.atomic.VariableAssignment;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
-import de.featjar.util.bin.JAR;
 import de.featjar.util.data.Pair;
 import de.featjar.util.io.IO;
 import de.featjar.util.logging.Logger;
@@ -66,6 +65,8 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 		command[4] = String.valueOf(timeout);
 	}
 
+	// todo: does not work currently (deletes entries from variablemap, intended?)
+	// possible sharpsat bug?
 	private CNF simplifyCNF(CNF cnf) {
 		final HashSet<Integer> unitClauses = new HashSet<>();
 		ArrayList<LiteralList> clauses = cnf.getClauses();
@@ -146,7 +147,8 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 	@Override
 	public BigInteger countSolutions() {
 		try {
-			final CNF cnf = simplifyCNF(formula.getCNF());
+			//final CNF cnf = simplifyCNF(formula.getCNF());
+			final CNF cnf = formula.getCNF();
 			if (cnf == null) {
 				return BigInteger.ZERO;
 			}

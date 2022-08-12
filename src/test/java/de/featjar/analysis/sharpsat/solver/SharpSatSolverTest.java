@@ -90,9 +90,7 @@ public class SharpSatSolverTest {
 		assertEquals(BigInteger.valueOf(3), result.get());
 	}
 
-	//@Test
-
-	// todo: fix test!
+	@Test
 	public void count2() {
 		final ModelRepresentation rep = load(modelDirectory.resolve(modelNames.get(3) + ".xml"));
 
