@@ -7,3 +7,10 @@ dependencies {
     api 'de.featjar:formula'
     api 'de.featjar:bin-sharpsat'
 }
+
+license {
+    ext {
+        author = 'Sebastian Krieter'
+        url = 'https://github.com/FeatJAR/formula-analysis-sharpsat'
+    }
+}
