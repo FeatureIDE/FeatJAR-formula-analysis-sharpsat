@@ -20,8 +20,6 @@
  */
 package de.featjar.analysis.sharpsat.solver;
 
-import java.util.List;
-
 import de.featjar.analysis.solver.AbstractDynamicFormula;
 import de.featjar.analysis.solver.RuntimeContradictionException;
 import de.featjar.clauses.CNF;
@@ -30,6 +28,7 @@ import de.featjar.clauses.FormulaToCNF;
 import de.featjar.clauses.LiteralList;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
+import java.util.List;
 
 /**
  * Formula for {@link SharpSatSolver}.
@@ -38,24 +37,23 @@ import de.featjar.formula.structure.atomic.literal.VariableMap;
  */
 public class SharpSatSolverFormula extends AbstractDynamicFormula<LiteralList> {
 
-	public SharpSatSolverFormula(VariableMap variableMap) {
-		super(variableMap);
-	}
+    public SharpSatSolverFormula(VariableMap variableMap) {
+        super(variableMap);
+    }
 
-	@Override
-	public List<LiteralList> push(Formula formula) throws RuntimeContradictionException {
-		final ClauseList clauses = FormulaToCNF.convert(formula, variableMap).getClauses();
-		clauses.forEach(constraints::add);
-		return clauses;
-	}
+    @Override
+    public List<LiteralList> push(Formula formula) throws RuntimeContradictionException {
+        final ClauseList clauses = FormulaToCNF.convert(formula, variableMap).getClauses();
+        clauses.forEach(constraints::add);
+        return clauses;
+    }
 
-	@Override
-	public void clear() {
-		constraints.clear();
-	}
+    @Override
+    public void clear() {
+        constraints.clear();
+    }
 
-	public CNF getCNF() {
-		return new CNF(variableMap, constraints);
-	}
-
+    public CNF getCNF() {
+        return new CNF(variableMap, constraints);
+    }
 }

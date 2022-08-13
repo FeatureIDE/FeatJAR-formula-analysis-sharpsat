@@ -20,29 +20,27 @@
  */
 package de.featjar.analysis.sharpsat;
 
-import java.math.BigInteger;
-
 import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
 import de.featjar.util.data.Identifier;
 import de.featjar.util.job.InternalMonitor;
+import java.math.BigInteger;
 
 /**
  * Counts the number of valid solutions to a formula.
- * 
+ *
  * @author Sebastian Krieter
  */
 public class CountSolutionsAnalysis extends SharpSatSolverAnalysis<BigInteger> {
 
-	public static final Identifier<BigInteger> identifier = new Identifier<>();
+    public static final Identifier<BigInteger> identifier = new Identifier<>();
 
-	@Override
-	public Identifier<BigInteger> getIdentifier() {
-		return identifier;
-	}
+    @Override
+    public Identifier<BigInteger> getIdentifier() {
+        return identifier;
+    }
 
-	@Override
-	protected BigInteger analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
-		return solver.countSolutions();
-	}
-
+    @Override
+    protected BigInteger analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
+        return solver.countSolutions();
+    }
 }

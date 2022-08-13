@@ -20,13 +20,12 @@
  */
 package de.featjar.configuration.list;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.clauses.solutions.SolutionList;
 import de.featjar.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.ModelRepresentation;
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 /**
  * Computes the ratio of configuration space covered by a configuration sample.
@@ -35,28 +34,27 @@ import de.featjar.formula.ModelRepresentation;
  */
 public class CompletenessMetric implements SampleMetric {
 
-	private ModelRepresentation rep;
+    private ModelRepresentation rep;
 
-	public CompletenessMetric(ModelRepresentation rep) {
-		this.rep = rep;
-	}
+    public CompletenessMetric(ModelRepresentation rep) {
+        this.rep = rep;
+    }
 
-	@Override
-	public double get(SolutionList sample) {
-		final BigDecimal totalSize = rep //
-			.getResult(new CountSolutionsAnalysis()) //
-			.map(BigDecimal::new) //
-			.orElseThrow();
-		return totalSize.signum() > 0 //
-			? new BigDecimal(sample.getSolutions().size()) //
-				.divide(totalSize, MathContext.DECIMAL128) //
-				.doubleValue()
-			: 0;
-	}
+    @Override
+    public double get(SolutionList sample) {
+        final BigDecimal totalSize = rep //
+                .getResult(new CountSolutionsAnalysis()) //
+                .map(BigDecimal::new) //
+                .orElseThrow();
+        return totalSize.signum() > 0 //
+                ? new BigDecimal(sample.getSolutions().size()) //
+                        .divide(totalSize, MathContext.DECIMAL128) //
+                        .doubleValue()
+                : 0;
+    }
 
-	@Override
-	public String getName() {
-		return "Completeness";
-	}
-
+    @Override
+    public String getName() {
+        return "Completeness";
+    }
 }

@@ -28,21 +28,20 @@ import de.featjar.util.job.InternalMonitor;
 
 /**
  * Counts the number of valid solutions to a formula.
- * 
+ *
  * @author Sebastian Krieter
  */
 public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SatSolver.SatResult> {
 
-	public static final Identifier<SatResult> identifier = new Identifier<>();
+    public static final Identifier<SatResult> identifier = new Identifier<>();
 
-	@Override
-	public Identifier<SatSolver.SatResult> getIdentifier() {
-		return identifier;
-	}
+    @Override
+    public Identifier<SatSolver.SatResult> getIdentifier() {
+        return identifier;
+    }
 
-	@Override
-	protected SatSolver.SatResult analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
-		return solver.hasSolution();
-	}
-
+    @Override
+    protected SatSolver.SatResult analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
+        return solver.hasSolution();
+    }
 }

@@ -34,26 +34,25 @@ import de.featjar.formula.structure.FormulaProvider;
  */
 public abstract class SharpSatSolverAnalysis<T> extends AbstractAnalysis<T, SharpSatSolver, Formula> {
 
-	protected int timeout = 30;
+    protected int timeout = 30;
 
-	public SharpSatSolverAnalysis() {
-		super();
-		solverInputProvider = FormulaProvider.empty();
-	}
+    public SharpSatSolverAnalysis() {
+        super();
+        solverInputProvider = FormulaProvider.empty();
+    }
 
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
-	}
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 
-	@Override
-	protected SharpSatSolver createSolver(Formula input) {
-		return new SharpSatSolver(input);
-	}
+    @Override
+    protected SharpSatSolver createSolver(Formula input) {
+        return new SharpSatSolver(input);
+    }
 
-	@Override
-	protected void prepareSolver(SharpSatSolver solver) {
-		super.prepareSolver(solver);
-		solver.setTimeout(timeout);
-	}
-
+    @Override
+    protected void prepareSolver(SharpSatSolver solver) {
+        super.prepareSolver(solver);
+        solver.setTimeout(timeout);
+    }
 }

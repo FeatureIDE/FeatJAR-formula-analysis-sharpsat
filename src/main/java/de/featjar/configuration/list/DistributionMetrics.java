@@ -20,11 +20,6 @@
  */
 package de.featjar.configuration.list;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.List;
-import java.util.function.DoubleSupplier;
-
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.clauses.ClauseList;
 import de.featjar.clauses.Clauses;
@@ -35,81 +30,81 @@ import de.featjar.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.ModelRepresentation;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.List;
+import java.util.function.DoubleSupplier;
 
 public class DistributionMetrics extends AggregatableMetrics {
 
-	public static class RatioDiffFunction {
+    public static class RatioDiffFunction {
 
-		private final ModelRepresentation rep;
-		private final VariableMap variableMap;
-		private final BigDecimal totalCount;
+        private final ModelRepresentation rep;
+        private final VariableMap variableMap;
+        private final BigDecimal totalCount;
 
-		public RatioDiffFunction(ModelRepresentation rep) {
-			this.rep = rep;
-			variableMap = rep.getFormula().getVariableMap().orElseGet(VariableMap::new);
-			final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-			totalCount = rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
-		}
+        public RatioDiffFunction(ModelRepresentation rep) {
+            this.rep = rep;
+            variableMap = rep.getFormula().getVariableMap().orElseGet(VariableMap::new);
+            final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
+            totalCount = rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
+        }
 
-		public double compute(SolutionList sample, ClauseList expression) {
-			final double sampleSize = sample.getSolutions().size();
-			if (sampleSize == 0) {
-				return 0;
-			}
-			int positiveCount = 0;
-			for (final LiteralList solution : sample.getSolutions()) {
-				for (final LiteralList clause : expression) {
-					if (solution.containsAll(clause)) {
-						positiveCount++;
-						break;
-					}
-				}
-			}
-			final double sampleRatio = positiveCount / sampleSize;
-			final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-			final List<Formula> assumedConstraints = analysis.getAssumedConstraints();
-			for (final LiteralList clause : expression) {
-				assumedConstraints.add(Clauses.toOrClause(clause.negate(), variableMap));
-			}
-			final BigDecimal negativeCount = rep.getResult(analysis)
-				.map(BigDecimal::new)
-				.orElseThrow();
-			final double actualRatio = 1 - negativeCount
-				.divide(totalCount, MathContext.DECIMAL128)
-				.doubleValue();
-			return Math.abs(actualRatio - sampleRatio);
-		}
+        public double compute(SolutionList sample, ClauseList expression) {
+            final double sampleSize = sample.getSolutions().size();
+            if (sampleSize == 0) {
+                return 0;
+            }
+            int positiveCount = 0;
+            for (final LiteralList solution : sample.getSolutions()) {
+                for (final LiteralList clause : expression) {
+                    if (solution.containsAll(clause)) {
+                        positiveCount++;
+                        break;
+                    }
+                }
+            }
+            final double sampleRatio = positiveCount / sampleSize;
+            final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
+            final List<Formula> assumedConstraints = analysis.getAssumedConstraints();
+            for (final LiteralList clause : expression) {
+                assumedConstraints.add(Clauses.toOrClause(clause.negate(), variableMap));
+            }
+            final BigDecimal negativeCount =
+                    rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
+            final double actualRatio =
+                    1 - negativeCount.divide(totalCount, MathContext.DECIMAL128).doubleValue();
+            return Math.abs(actualRatio - sampleRatio);
+        }
+    }
 
-	}
+    private final RatioDiffFunction function;
+    private final List<ClauseList> expressionList;
+    private final String functionName;
 
-	private final RatioDiffFunction function;
-	private final List<ClauseList> expressionList;
-	private final String functionName;
+    public DistributionMetrics(ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
+        this.expressionList = expressionList;
+        this.functionName = functionName;
+        function = rep != null ? new RatioDiffFunction(rep) : null;
+    }
 
-	public DistributionMetrics(ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
-		this.expressionList = expressionList;
-		this.functionName = functionName;
-		function = rep != null ? new RatioDiffFunction(rep) : null;
-	}
+    public static List<SampleMetric> getAllAggregates(
+            ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
+        return new DistributionMetrics(rep, expressionList, functionName).getAllAggregates();
+    }
 
-	public static List<SampleMetric> getAllAggregates(ModelRepresentation rep,
-		List<ClauseList> expressionList, String functionName) {
-		return new DistributionMetrics(rep, expressionList, functionName).getAllAggregates();
-	}
+    @Override
+    public SampleMetric getAggregate(String name, DoubleSupplier aggregate) {
+        return new DoubleMetric(functionName + "_distribution_" + name, aggregate);
+    }
 
-	@Override
-	public SampleMetric getAggregate(String name, DoubleSupplier aggregate) {
-		return new DoubleMetric(functionName + "_distribution_" + name, aggregate);
-	}
-
-	@Override
-	public double[] computeValues() {
-		final double[] values = new double[expressionList.size()];
-		int index = 0;
-		for (final ClauseList expression : expressionList) {
-			values[index++] = function.compute(sample, expression);
-		}
-		return values;
-	}
-
+    @Override
+    public double[] computeValues() {
+        final double[] values = new double[expressionList.size()];
+        int index = 0;
+        for (final ClauseList expression : expressionList) {
+            values[index++] = function.compute(sample, expression);
+        }
+        return values;
+    }
 }
