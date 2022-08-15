@@ -62,8 +62,6 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
         command[4] = String.valueOf(timeout);
     }
 
-    // todo: does not work currently (deletes entries from variablemap, intended?)
-    // possible sharpsat bug?
     private CNF simplifyCNF(CNF cnf) {
         final HashSet<Integer> unitClauses = new HashSet<>();
         ArrayList<LiteralList> clauses = cnf.getClauses();
@@ -132,7 +130,7 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
             }
 
             final VariableMap newVariables = variables.clone();
-            unitClauses.stream().map(i -> Math.abs(i)).forEach(newVariables::removeVariable);
+            unitClauses.stream().map(Math::abs).forEach(newVariables::removeVariable);
 
             if (clauses.isEmpty()) {
                 return new CNF(newVariables);
@@ -145,7 +143,7 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
     @Override
     public BigInteger countSolutions() {
         try {
-            // final CNF cnf = simplifyCNF(formula.getCNF());
+            // final CNF cnf = simplifyCNF(formula.getCNF()); // variable map not adapted correctly
             final CNF cnf = formula.getCNF();
             if (cnf == null) {
                 return BigInteger.ZERO;
