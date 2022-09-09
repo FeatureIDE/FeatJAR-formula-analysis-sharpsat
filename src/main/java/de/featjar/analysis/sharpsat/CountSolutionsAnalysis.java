@@ -22,7 +22,7 @@ package de.featjar.analysis.sharpsat;
 
 import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
 import de.featjar.util.data.Identifier;
-import de.featjar.util.job.InternalMonitor;
+import de.featjar.util.task.Monitor;
 import java.math.BigInteger;
 
 /**
@@ -40,7 +40,7 @@ public class CountSolutionsAnalysis extends SharpSatSolverAnalysis<BigInteger> {
     }
 
     @Override
-    protected BigInteger analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
+    protected BigInteger analyze(SharpSatSolver solver, Monitor monitor) throws Exception {
         return solver.countSolutions();
     }
 }

@@ -24,7 +24,7 @@ import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
 import de.featjar.analysis.solver.SatSolver;
 import de.featjar.analysis.solver.SatSolver.SatResult;
 import de.featjar.util.data.Identifier;
-import de.featjar.util.job.InternalMonitor;
+import de.featjar.util.task.Monitor;
 
 /**
  * Counts the number of valid solutions to a formula.
@@ -41,7 +41,7 @@ public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SatSolver.SatRe
     }
 
     @Override
-    protected SatSolver.SatResult analyze(SharpSatSolver solver, InternalMonitor monitor) throws Exception {
+    protected SatSolver.SatResult analyze(SharpSatSolver solver, Monitor monitor) throws Exception {
         return solver.hasSolution();
     }
 }
