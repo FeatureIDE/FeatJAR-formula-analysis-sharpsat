@@ -21,7 +21,6 @@
 package de.featjar.analysis.sharpsat;
 
 import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
-import de.featjar.util.data.Identifier;
 import de.featjar.util.task.Monitor;
 import java.math.BigInteger;
 
@@ -31,14 +30,6 @@ import java.math.BigInteger;
  * @author Sebastian Krieter
  */
 public class CountSolutionsAnalysis extends SharpSatSolverAnalysis<BigInteger> {
-
-    public static final Identifier<BigInteger> identifier = new Identifier<>();
-
-    @Override
-    public Identifier<BigInteger> getIdentifier() {
-        return identifier;
-    }
-
     @Override
     protected BigInteger analyze(SharpSatSolver solver, Monitor monitor) throws Exception {
         return solver.countSolutions();

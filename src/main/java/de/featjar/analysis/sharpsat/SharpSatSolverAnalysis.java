@@ -23,7 +23,7 @@ package de.featjar.analysis.sharpsat;
 import de.featjar.analysis.AbstractAnalysis;
 import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
 import de.featjar.formula.structure.Formula;
-import de.featjar.formula.structure.FormulaProvider;
+import de.featjar.formula.structure.FormulaComputation;
 
 /**
  * Base class for analyses using a {@link SharpSatSolver}.
@@ -38,7 +38,7 @@ public abstract class SharpSatSolverAnalysis<T> extends AbstractAnalysis<T, Shar
 
     public SharpSatSolverAnalysis() {
         super();
-        solverInputProvider = FormulaProvider.empty();
+        solverInputComputation = FormulaComputation.empty();
     }
 
     public void setTimeout(int timeout) {

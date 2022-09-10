@@ -22,8 +22,6 @@ package de.featjar.analysis.sharpsat;
 
 import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
 import de.featjar.analysis.solver.SatSolver;
-import de.featjar.analysis.solver.SatSolver.SatResult;
-import de.featjar.util.data.Identifier;
 import de.featjar.util.task.Monitor;
 
 /**
@@ -32,14 +30,6 @@ import de.featjar.util.task.Monitor;
  * @author Sebastian Krieter
  */
 public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SatSolver.SatResult> {
-
-    public static final Identifier<SatResult> identifier = new Identifier<>();
-
-    @Override
-    public Identifier<SatSolver.SatResult> getIdentifier() {
-        return identifier;
-    }
-
     @Override
     protected SatSolver.SatResult analyze(SharpSatSolver solver, Monitor monitor) throws Exception {
         return solver.hasSolution();
