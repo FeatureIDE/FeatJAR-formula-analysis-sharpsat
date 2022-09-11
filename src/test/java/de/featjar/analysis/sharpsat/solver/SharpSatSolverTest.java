@@ -34,8 +34,8 @@ import de.featjar.formula.structure.compound.Biimplies;
 import de.featjar.formula.structure.compound.Implies;
 import de.featjar.formula.structure.compound.Or;
 import de.featjar.util.data.Result;
-import de.featjar.util.extension.Extensions;
-import de.featjar.util.log.Logger;
+import de.featjar.util.extension.ExtensionManager;
+import de.featjar.util.log.Log;
 import java.math.BigInteger;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,7 +61,7 @@ public class SharpSatSolverTest {
     }
 
     static {
-        Extensions.install();
+        ExtensionManager.install();
     }
 
     @Test
@@ -82,7 +82,7 @@ public class SharpSatSolverTest {
 
         final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
         final Result<?> result = rep.getResult(analysis);
-        result.orElse(Logger::logProblems);
+        result.orElse(Log::problems);
         assertTrue(result.isPresent());
         assertEquals(BigInteger.valueOf(3), result.get());
     }
@@ -93,7 +93,7 @@ public class SharpSatSolverTest {
 
         final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
         final Result<?> result = rep.getResult(analysis);
-        result.orElse(Logger::logProblems);
+        result.orElse(Log::problems);
         assertTrue(result.isPresent());
         assertEquals(BigInteger.valueOf(960), result.get());
     }

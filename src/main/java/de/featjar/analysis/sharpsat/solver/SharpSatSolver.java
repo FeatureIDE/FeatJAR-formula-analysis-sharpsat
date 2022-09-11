@@ -30,7 +30,7 @@ import de.featjar.formula.structure.atomic.VariableAssignment;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
 import de.featjar.util.data.Pair;
 import de.featjar.util.io.IO;
-import de.featjar.util.log.Logger;
+import de.featjar.util.log.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
@@ -179,7 +179,7 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
                 Files.deleteIfExists(tempFile);
             }
         } catch (final Exception e) {
-            Logger.logError(e);
+            Feat.log().error(e);
         }
         return INVALID_COUNT;
     }
