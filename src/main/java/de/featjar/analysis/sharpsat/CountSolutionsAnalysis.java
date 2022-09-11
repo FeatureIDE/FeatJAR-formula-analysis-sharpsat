@@ -21,7 +21,7 @@
 package de.featjar.analysis.sharpsat;
 
 import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
-import de.featjar.util.task.Monitor;
+import de.featjar.base.task.Monitor;
 import java.math.BigInteger;
 
 /**

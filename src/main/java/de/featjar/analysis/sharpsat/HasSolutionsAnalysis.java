@@ -22,7 +22,7 @@ package de.featjar.analysis.sharpsat;
 
 import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
 import de.featjar.analysis.solver.SatSolver;
-import de.featjar.util.task.Monitor;
+import de.featjar.base.task.Monitor;
 
 /**
  * Counts the number of valid solutions to a formula.

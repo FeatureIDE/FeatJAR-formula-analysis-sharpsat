@@ -28,9 +28,9 @@ import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.Assignment;
 import de.featjar.formula.structure.atomic.VariableAssignment;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
-import de.featjar.util.data.Pair;
-import de.featjar.util.io.IO;
-import de.featjar.util.log.Log;
+import de.featjar.base.data.Pair;
+import de.featjar.base.io.IO;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
