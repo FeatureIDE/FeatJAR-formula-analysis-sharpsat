@@ -21,12 +21,12 @@
 package de.featjar.configuration.list;
 
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
-import de.featjar.clauses.ClauseList;
-import de.featjar.clauses.Clauses;
-import de.featjar.clauses.LiteralList;
-import de.featjar.clauses.solutions.SolutionList;
-import de.featjar.clauses.solutions.metrics.AggregatableMetrics;
-import de.featjar.clauses.solutions.metrics.SampleMetric;
+import de.featjar.formula.clauses.ClauseList;
+import de.featjar.formula.clauses.Clauses;
+import de.featjar.formula.clauses.LiteralList;
+import de.featjar.formula.clauses.solutions.SolutionList;
+import de.featjar.formula.clauses.solutions.metrics.AggregatableMetrics;
+import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.ModelRepresentation;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.literal.VariableMap;

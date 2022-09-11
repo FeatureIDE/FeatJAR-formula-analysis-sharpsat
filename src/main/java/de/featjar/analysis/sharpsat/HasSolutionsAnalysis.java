@@ -20,8 +20,8 @@
  */
 package de.featjar.analysis.sharpsat;
 
-import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
-import de.featjar.analysis.solver.SatSolver;
+import de.featjar.analysis.sharpsat.solver.SharpSATSolver;
+import de.featjar.formula.analysis.solver.SATSolver;
 import de.featjar.base.task.Monitor;
 
 /**
@@ -29,9 +29,9 @@ import de.featjar.base.task.Monitor;
  *
  * @author Sebastian Krieter
  */
-public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SatSolver.SatResult> {
+public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SATSolver.SatResult> {
     @Override
-    protected SatSolver.SatResult analyze(SharpSatSolver solver, Monitor monitor) throws Exception {
+    protected SATSolver.SatResult analyze(SharpSATSolver solver, Monitor monitor) throws Exception {
         return solver.hasSolution();
     }
 }

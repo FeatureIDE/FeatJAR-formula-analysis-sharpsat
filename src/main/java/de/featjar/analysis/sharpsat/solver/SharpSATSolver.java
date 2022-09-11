@@ -21,8 +21,8 @@
 package de.featjar.analysis.sharpsat.solver;
 
 import de.featjar.bin.sharpsat.SharpSatBinary;
-import de.featjar.clauses.CNF;
-import de.featjar.clauses.LiteralList;
+import de.featjar.formula.clauses.CNF;
+import de.featjar.formula.clauses.LiteralList;
 import de.featjar.formula.io.dimacs.DIMACSFormatCNF;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.Assignment;
@@ -39,7 +39,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver {
+public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpSATSolver {
 
     public static final BigInteger INVALID_COUNT = BigInteger.valueOf(-1);
 
@@ -50,7 +50,7 @@ public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver
 
     private long timeout = 0;
 
-    public SharpSatSolver(Formula modelFormula) {
+    public SharpSATSolver(Formula modelFormula) {
         final VariableMap variables = modelFormula.getVariableMap().orElseGet(VariableMap::new);
         formula = new SharpSatSolverFormula(variables);
         modelFormula.getChildren().stream().map(c -> (Formula) c).forEach(formula::push);

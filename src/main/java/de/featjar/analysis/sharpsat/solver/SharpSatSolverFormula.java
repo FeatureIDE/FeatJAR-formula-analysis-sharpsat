@@ -20,18 +20,18 @@
  */
 package de.featjar.analysis.sharpsat.solver;
 
-import de.featjar.analysis.solver.AbstractDynamicFormula;
-import de.featjar.analysis.solver.RuntimeContradictionException;
-import de.featjar.clauses.CNF;
-import de.featjar.clauses.ClauseList;
-import de.featjar.clauses.FormulaToCNF;
-import de.featjar.clauses.LiteralList;
+import de.featjar.formula.analysis.solver.AbstractDynamicFormula;
+import de.featjar.formula.analysis.solver.RuntimeContradictionException;
+import de.featjar.formula.clauses.CNF;
+import de.featjar.formula.clauses.ClauseList;
+import de.featjar.formula.clauses.FormulaToCNF;
+import de.featjar.formula.clauses.LiteralList;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
 import java.util.List;
 
 /**
- * Formula for {@link SharpSatSolver}.
+ * Formula for {@link SharpSATSolver}.
  *
  * @author Sebastian Krieter
  */

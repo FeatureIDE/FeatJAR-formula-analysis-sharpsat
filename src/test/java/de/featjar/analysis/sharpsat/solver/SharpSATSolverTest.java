@@ -43,7 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-public class SharpSatSolverTest {
+public class SharpSATSolverTest {
 
     private static final Path modelDirectory = Paths.get("src/test/resources/testFeatureModels");
 

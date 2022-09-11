@@ -21,8 +21,8 @@
 package de.featjar.configuration.list;
 
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
-import de.featjar.clauses.solutions.SolutionList;
-import de.featjar.clauses.solutions.metrics.SampleMetric;
+import de.featjar.formula.clauses.solutions.SolutionList;
+import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.ModelRepresentation;
 import java.math.BigDecimal;
 import java.math.MathContext;

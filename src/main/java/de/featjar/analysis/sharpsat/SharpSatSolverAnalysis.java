@@ -20,19 +20,18 @@
  */
 package de.featjar.analysis.sharpsat;
 
-import de.featjar.analysis.AbstractAnalysis;
-import de.featjar.analysis.sharpsat.solver.SharpSatSolver;
+import de.featjar.formula.analysis.Analysis;
+import de.featjar.analysis.sharpsat.solver.SharpSATSolver;
 import de.featjar.formula.structure.Formula;
-import de.featjar.formula.structure.FormulaComputation;
 
 /**
- * Base class for analyses using a {@link SharpSatSolver}.
+ * Base class for analyses using a {@link SharpSATSolver}.
  *
  * @param <T> the type of the analysis result.
  *
  * @author Sebastian Krieter
  */
-public abstract class SharpSatSolverAnalysis<T> extends AbstractAnalysis<T, SharpSatSolver, Formula> {
+public abstract class SharpSatSolverAnalysis<T> extends Analysis<T, SharpSATSolver, Formula> {
 
     protected int timeout = 30;
 
@@ -46,12 +45,12 @@ public abstract class SharpSatSolverAnalysis<T> extends AbstractAnalysis<T, Shar
     }
 
     @Override
-    protected SharpSatSolver createSolver(Formula input) {
-        return new SharpSatSolver(input);
+    protected SharpSATSolver createSolver(Formula input) {
+        return new SharpSATSolver(input);
     }
 
     @Override
-    protected void prepareSolver(SharpSatSolver solver) {
+    protected void prepareSolver(SharpSATSolver solver) {
         super.prepareSolver(solver);
         solver.setTimeout(timeout);
     }
