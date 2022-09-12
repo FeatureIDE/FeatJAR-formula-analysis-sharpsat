@@ -36,7 +36,6 @@ public abstract class SharpSatSolverAnalysis<T> extends Analysis<T, SharpSATSolv
     protected int timeout = 30;
 
     public SharpSatSolverAnalysis() {
-        super();
         solverInputComputation = FormulaComputation.empty();
     }
 

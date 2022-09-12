@@ -24,15 +24,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
-import de.featjar.formula.ModelRepresentation;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.Formulas;
 import de.featjar.formula.structure.atomic.literal.Literal;
-import de.featjar.formula.structure.atomic.literal.VariableMap;
-import de.featjar.formula.structure.compound.And;
-import de.featjar.formula.structure.compound.Biimplies;
-import de.featjar.formula.structure.compound.Implies;
-import de.featjar.formula.structure.compound.Or;
+import de.featjar.formula.structure.VariableMap;
+import de.featjar.formula.structure.connective.And;
+import de.featjar.formula.structure.connective.BiImplies;
+import de.featjar.formula.structure.connective.Implies;
+import de.featjar.formula.structure.connective.Or;
 import de.featjar.base.data.Result;
 import de.featjar.base.extension.ExtensionManager;
 import de.featjar.base.log.Log;
@@ -73,7 +72,7 @@ public class SharpSATSolverTest {
 
         final Implies implies1 = new Implies(a, b);
         final Or or = new Or(implies1, c);
-        final Biimplies equals = new Biimplies(a, b);
+        final BiImplies equals = new BiImplies(a, b);
         final And and = new And(equals, c);
         final Implies formula = new Implies(or, and);
 
