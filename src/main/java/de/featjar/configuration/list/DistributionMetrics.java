@@ -27,7 +27,7 @@ import de.featjar.formula.clauses.LiteralList;
 import de.featjar.formula.clauses.solutions.SolutionList;
 import de.featjar.formula.clauses.solutions.metrics.AggregatableMetrics;
 import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
-import de.featjar.formula.structure.Formula;
+import de.featjar.formula.structure.Expression;
 import de.featjar.formula.tmp.TermMap;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -65,7 +65,7 @@ public class DistributionMetrics extends AggregatableMetrics {
             }
             final double sampleRatio = positiveCount / sampleSize;
             final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-            final List<Formula> assumedConstraints = analysis.getAssumedConstraints();
+            final List<Expression> assumedConstraints = analysis.getAssumedConstraints();
             for (final LiteralList clause : expression) {
                 assumedConstraints.add(Clauses.toOrClause(clause.negate(), termMap));
             }

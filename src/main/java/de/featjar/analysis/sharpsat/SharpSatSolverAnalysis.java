@@ -22,7 +22,7 @@ package de.featjar.analysis.sharpsat;
 
 import de.featjar.formula.analysis.Analysis;
 import de.featjar.analysis.sharpsat.solver.SharpSATSolver;
-import de.featjar.formula.structure.Formula;
+import de.featjar.formula.structure.Expression;
 
 /**
  * Base class for analyses using a {@link SharpSATSolver}.
@@ -31,7 +31,7 @@ import de.featjar.formula.structure.Formula;
  *
  * @author Sebastian Krieter
  */
-public abstract class SharpSatSolverAnalysis<T> extends Analysis<T, SharpSATSolver, Formula> {
+public abstract class SharpSatSolverAnalysis<T> extends Analysis<T, SharpSATSolver, Expression> {
 
     protected int timeout = 30;
 
@@ -44,7 +44,7 @@ public abstract class SharpSatSolverAnalysis<T> extends Analysis<T, SharpSATSolv
     }
 
     @Override
-    protected SharpSATSolver createSolver(Formula input) {
+    protected SharpSATSolver createSolver(Expression input) {
         return new SharpSATSolver(input);
     }
 

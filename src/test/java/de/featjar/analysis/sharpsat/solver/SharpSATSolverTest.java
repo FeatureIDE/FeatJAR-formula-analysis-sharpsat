@@ -24,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
-import de.featjar.formula.structure.Formula;
+import de.featjar.formula.structure.Expression;
 import de.featjar.formula.tmp.Formulas;
-import de.featjar.formula.structure.formula.literal.Literal;
+import de.featjar.formula.structure.formula.predicate.Literal;
 import de.featjar.formula.tmp.TermMap;
 import de.featjar.formula.structure.formula.connective.And;
 import de.featjar.formula.structure.formula.connective.BiImplies;
@@ -76,8 +76,8 @@ public class SharpSATSolverTest {
         final And and = new And(equals, c);
         final Implies formula = new Implies(or, and);
 
-        final Formula cnfFormula = Formulas.toCNF(formula).get();
-        final ModelRepresentation rep = new ModelRepresentation(cnfFormula);
+        final Expression cnfExpression = Formulas.toCNF(formula).get();
+        final ModelRepresentation rep = new ModelRepresentation(cnfExpression);
 
         final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
         final Result<?> result = rep.getResult(analysis);
