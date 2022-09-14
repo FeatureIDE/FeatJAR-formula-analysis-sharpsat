@@ -27,7 +27,7 @@ import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.Formulas;
 import de.featjar.formula.structure.atomic.literal.Literal;
-import de.featjar.formula.structure.VariableMap;
+import de.featjar.formula.structure.TermMap;
 import de.featjar.formula.structure.connective.And;
 import de.featjar.formula.structure.connective.BiImplies;
 import de.featjar.formula.structure.connective.Implies;
@@ -65,7 +65,7 @@ public class SharpSATSolverTest {
 
     @Test
     public void count() {
-        final VariableMap variables = new VariableMap();
+        final TermMap variables = new TermMap();
         final Literal a = variables.createLiteral("a");
         final Literal b = variables.createLiteral("b");
         final Literal c = variables.createLiteral("c");

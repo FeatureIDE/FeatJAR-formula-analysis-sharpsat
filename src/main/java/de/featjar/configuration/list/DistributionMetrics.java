@@ -28,7 +28,7 @@ import de.featjar.formula.clauses.solutions.SolutionList;
 import de.featjar.formula.clauses.solutions.metrics.AggregatableMetrics;
 import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.structure.Formula;
-import de.featjar.formula.structure.VariableMap;
+import de.featjar.formula.structure.TermMap;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
@@ -39,12 +39,12 @@ public class DistributionMetrics extends AggregatableMetrics {
     public static class RatioDiffFunction {
 
         private final ModelRepresentation rep;
-        private final VariableMap variableMap;
+        private final TermMap termMap;
         private final BigDecimal totalCount;
 
         public RatioDiffFunction(ModelRepresentation rep) {
             this.rep = rep;
-            variableMap = rep.getFormula().getVariableMap().orElseGet(VariableMap::new);
+            termMap = rep.getFormula().getVariableMap().orElseGet(TermMap::new);
             final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
             totalCount = rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
         }
@@ -67,7 +67,7 @@ public class DistributionMetrics extends AggregatableMetrics {
             final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
             final List<Formula> assumedConstraints = analysis.getAssumedConstraints();
             for (final LiteralList clause : expression) {
-                assumedConstraints.add(Clauses.toOrClause(clause.negate(), variableMap));
+                assumedConstraints.add(Clauses.toOrClause(clause.negate(), termMap));
             }
             final BigDecimal negativeCount =
                     rep.getResult(analysis).map(BigDecimal::new).orElseThrow();

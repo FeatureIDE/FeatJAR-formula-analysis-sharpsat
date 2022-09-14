@@ -27,7 +27,7 @@ import de.featjar.formula.io.dimacs.DIMACSFormatCNF;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.assignment.Assignment;
 import de.featjar.formula.structure.assignment.VariableAssignment;
-import de.featjar.formula.structure.VariableMap;
+import de.featjar.formula.structure.TermMap;
 import de.featjar.base.data.Pair;
 import de.featjar.base.io.IO;
 
@@ -51,7 +51,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     private long timeout = 0;
 
     public SharpSATSolver(Formula modelFormula) {
-        final VariableMap variables = modelFormula.getVariableMap().orElseGet(VariableMap::new);
+        final TermMap variables = modelFormula.getTermMap().orElseGet(TermMap::new);
         formula = new SharpSatSolverFormula(variables);
         modelFormula.getChildren().stream().map(c -> (Formula) c).forEach(formula::push);
         assumptions = new VariableAssignment(variables);
@@ -81,12 +81,12 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
             }
         }
         if (!unitClauses.isEmpty()) {
-            final VariableMap variables = cnf.getVariableMap();
+            final TermMap variables = cnf.getVariableMap();
             int unitClauseCount = 0;
             while (unitClauseCount != unitClauses.size()) {
                 unitClauseCount = unitClauses.size();
                 if (unitClauseCount == variables.getVariableCount()) {
-                    return new CNF(new VariableMap());
+                    return new CNF(new TermMap());
                 }
                 final ArrayList<LiteralList> nonUnitClauses = new ArrayList<>();
                 clauseLoop:
@@ -129,7 +129,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
                 clauses = nonUnitClauses;
             }
 
-            final VariableMap newVariables = variables.clone();
+            final TermMap newVariables = variables.clone();
             unitClauses.stream().map(Math::abs).forEach(newVariables::removeVariable);
 
             if (clauses.isEmpty()) {
@@ -218,7 +218,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     }
 
     @Override
-    public VariableMap getVariables() {
+    public TermMap getVariables() {
         return formula.getVariableMap();
     }
 }
