@@ -27,7 +27,7 @@ import de.featjar.formula.clauses.ClauseList;
 import de.featjar.formula.clauses.FormulaToCNF;
 import de.featjar.formula.clauses.LiteralList;
 import de.featjar.formula.structure.Expression;
-import de.featjar.formula.tmp.TermMap;
+import de.featjar.formula.structure.map.TermMap;
 import java.util.List;
 
 /**

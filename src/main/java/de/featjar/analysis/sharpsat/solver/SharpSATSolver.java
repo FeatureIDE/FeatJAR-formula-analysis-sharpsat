@@ -27,7 +27,7 @@ import de.featjar.formula.io.dimacs.DIMACSFormatCNF;
 import de.featjar.formula.structure.Expression;
 import de.featjar.formula.structure.assignment.Assignment;
 import de.featjar.formula.structure.assignment.VariableAssignment;
-import de.featjar.formula.tmp.TermMap;
+import de.featjar.formula.structure.map.TermMap;
 import de.featjar.base.data.Pair;
 import de.featjar.base.io.IO;
 

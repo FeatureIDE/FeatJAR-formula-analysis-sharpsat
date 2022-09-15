@@ -28,7 +28,7 @@ import de.featjar.formula.clauses.solutions.SolutionList;
 import de.featjar.formula.clauses.solutions.metrics.AggregatableMetrics;
 import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.structure.Expression;
-import de.featjar.formula.tmp.TermMap;
+import de.featjar.formula.structure.map.TermMap;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
