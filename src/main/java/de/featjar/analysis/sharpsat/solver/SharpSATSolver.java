@@ -23,10 +23,10 @@ package de.featjar.analysis.sharpsat.solver;
 import de.featjar.bin.sharpsat.SharpSatBinary;
 import de.featjar.formula.clauses.CNF;
 import de.featjar.formula.clauses.LiteralList;
-import de.featjar.formula.io.dimacs.DIMACSFormatCNF;
+import de.featjar.formula.io.dimacs.DIMACSCNFFormat;
 import de.featjar.formula.structure.Expression;
 import de.featjar.formula.assignment.Assignment;
-import de.featjar.formula.assignment.NameAssignment;
+import de.featjar.formula.assignment.VariableAssignment;
 import de.featjar.formula.structure.map.TermMap;
 import de.featjar.base.data.Pair;
 import de.featjar.base.io.IO;
@@ -44,7 +44,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     public static final BigInteger INVALID_COUNT = BigInteger.valueOf(-1);
 
     private final SharpSatSolverFormula formula;
-    private final NameAssignment assumptions;
+    private final VariableAssignment assumptions;
 
     private final String[] command = new String[6];
 
@@ -54,7 +54,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
         final TermMap variables = modelExpression.getTermMap().orElseGet(TermMap::new);
         formula = new SharpSatSolverFormula(variables);
         modelExpression.getChildren().stream().map(c -> (Expression) c).forEach(formula::push);
-        assumptions = new NameAssignment(variables);
+        assumptions = new VariableAssignment(variables);
         command[0] = new SharpSatBinary().getPath().toString();
         command[1] = "-noCC";
         command[2] = "-noIBCP";
@@ -153,7 +153,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
             }
             final Path tempFile = Files.createTempFile("sharpSATinput", ".dimacs");
             try {
-                IO.save(cnf, tempFile, new DIMACSFormatCNF());
+                IO.save(cnf, tempFile, new DIMACSCNFFormat());
 
                 command[command.length - 1] = tempFile.toString();
                 final ProcessBuilder processBuilder = new ProcessBuilder(command);
