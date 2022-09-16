@@ -25,8 +25,8 @@ import de.featjar.formula.clauses.CNF;
 import de.featjar.formula.clauses.LiteralList;
 import de.featjar.formula.io.dimacs.DIMACSFormatCNF;
 import de.featjar.formula.structure.Expression;
-import de.featjar.formula.structure.assignment.Assignment;
-import de.featjar.formula.structure.assignment.VariableAssignment;
+import de.featjar.formula.assignment.Assignment;
+import de.featjar.formula.assignment.NameAssignment;
 import de.featjar.formula.structure.map.TermMap;
 import de.featjar.base.data.Pair;
 import de.featjar.base.io.IO;
@@ -44,7 +44,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     public static final BigInteger INVALID_COUNT = BigInteger.valueOf(-1);
 
     private final SharpSatSolverFormula formula;
-    private final VariableAssignment assumptions;
+    private final NameAssignment assumptions;
 
     private final String[] command = new String[6];
 
@@ -54,7 +54,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
         final TermMap variables = modelExpression.getTermMap().orElseGet(TermMap::new);
         formula = new SharpSatSolverFormula(variables);
         modelExpression.getChildren().stream().map(c -> (Expression) c).forEach(formula::push);
-        assumptions = new VariableAssignment(variables);
+        assumptions = new NameAssignment(variables);
         command[0] = new SharpSatBinary().getPath().toString();
         command[1] = "-noCC";
         command[2] = "-noIBCP";
@@ -73,7 +73,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
                 }
             }
         }
-        for (final Pair<Integer, Object> entry : assumptions.getAll()) {
+        for (final Pair<Integer, Object> entry : assumptions.get()) {
             final int variable = entry.getKey();
             final int literal = (entry.getValue() == Boolean.TRUE) ? variable : -variable;
             if (unitClauses.add(literal) && unitClauses.contains(-literal)) {
