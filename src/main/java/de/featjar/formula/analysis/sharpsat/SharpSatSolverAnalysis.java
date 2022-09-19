@@ -18,10 +18,10 @@
  *
  * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
  */
-package de.featjar.analysis.sharpsat;
+package de.featjar.formula.analysis.sharpsat;
 
 import de.featjar.formula.analysis.Analysis;
-import de.featjar.analysis.sharpsat.solver.SharpSATSolver;
+import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
 import de.featjar.formula.structure.Expression;
 
 /**

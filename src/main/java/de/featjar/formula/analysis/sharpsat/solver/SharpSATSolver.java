@@ -18,7 +18,7 @@
  *
  * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
  */
-package de.featjar.analysis.sharpsat.solver;
+package de.featjar.formula.analysis.sharpsat.solver;
 
 import de.featjar.bin.sharpsat.SharpSatBinary;
 import de.featjar.formula.clauses.CNF;

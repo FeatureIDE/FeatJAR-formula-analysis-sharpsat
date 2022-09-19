@@ -18,20 +18,21 @@
  *
  * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
  */
-package de.featjar.analysis.sharpsat;
+package de.featjar.formula.analysis.sharpsat;
 
-import de.featjar.analysis.sharpsat.solver.SharpSATSolver;
-import de.featjar.formula.analysis.solver.SATSolver;
+import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
 import de.featjar.base.task.Monitor;
+
+import java.math.BigInteger;
 
 /**
  * Counts the number of valid solutions to a formula.
  *
  * @author Sebastian Krieter
  */
-public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SATSolver.SatResult> {
+public class CountSolutionsAnalysis extends SharpSatSolverAnalysis<BigInteger> {
     @Override
-    protected SATSolver.SatResult analyze(SharpSATSolver solver, Monitor monitor) throws Exception {
-        return solver.hasSolution();
+    protected BigInteger analyze(SharpSATSolver solver, Monitor monitor) throws Exception {
+        return solver.countSolutions();
     }
 }

@@ -23,7 +23,7 @@ package de.featjar.analysis.sharpsat.solver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
+import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.structure.Expression;
 import de.featjar.formula.tmp.Formulas;
 import de.featjar.formula.structure.formula.predicate.Literal;

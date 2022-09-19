@@ -18,9 +18,9 @@
  *
  * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
  */
-package de.featjar.configuration.list;
+package de.featjar.formula.configuration.list;
 
-import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
+import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.clauses.solutions.SolutionList;
 import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
 
