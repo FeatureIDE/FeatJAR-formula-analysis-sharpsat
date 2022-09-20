@@ -185,15 +185,15 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     }
 
     @Override
-    public SatResult hasSolution() {
+    public SATResult hasSolution() {
         final int comparision = countSolutions().compareTo(BigInteger.ZERO);
         switch (comparision) {
             case -1:
-                return SatResult.TIMEOUT;
+                return SATResult.TIMEOUT;
             case 0:
-                return SatResult.FALSE;
+                return SATResult.FALSE;
             case 1:
-                return SatResult.TRUE;
+                return SATResult.TRUE;
             default:
                 throw new IllegalStateException(String.valueOf(comparision));
         }
@@ -213,12 +213,12 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     }
 
     @Override
-    public SharpSatSolverFormula getDynamicFormula() {
+    public SharpSatSolverFormula getSolverFormula() {
         return formula;
     }
 
     @Override
-    public TermMap getVariables() {
+    public TermMap getVariableMap() {
         return formula.getVariableMap();
     }
 }

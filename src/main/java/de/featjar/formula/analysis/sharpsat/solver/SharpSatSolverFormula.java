@@ -20,7 +20,7 @@
  */
 package de.featjar.formula.analysis.sharpsat.solver;
 
-import de.featjar.formula.analysis.solver.AbstractDynamicFormula;
+import de.featjar.formula.analysis.solver.SolverFormula;
 import de.featjar.formula.analysis.solver.RuntimeContradictionException;
 import de.featjar.formula.clauses.CNF;
 import de.featjar.formula.clauses.ClauseList;
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Sebastian Krieter
  */
-public class SharpSatSolverFormula extends AbstractDynamicFormula<LiteralList> {
+public class SharpSatSolverFormula extends SolverFormula<LiteralList> {
 
     public SharpSatSolverFormula(TermMap termMap) {
         super(termMap);
@@ -44,16 +44,16 @@ public class SharpSatSolverFormula extends AbstractDynamicFormula<LiteralList> {
     @Override
     public List<LiteralList> push(Expression expression) throws RuntimeContradictionException {
         final ClauseList clauses = FormulaToCNF.convert(expression, termMap).getClauses();
-        clauses.forEach(constraints::add);
+        clauses.forEach(this.solverFormulas::add);
         return clauses;
     }
 
     @Override
     public void clear() {
-        constraints.clear();
+        solverFormulas.clear();
     }
 
     public CNF getCNF() {
-        return new CNF(termMap, constraints);
+        return new CNF(termMap, solverFormulas);
     }
 }

@@ -29,9 +29,9 @@ import de.featjar.base.task.Monitor;
  *
  * @author Sebastian Krieter
  */
-public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SATSolver.SatResult> {
+public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SATSolver.SATResult> {
     @Override
-    protected SATSolver.SatResult analyze(SharpSATSolver solver, Monitor monitor) throws Exception {
+    protected SATSolver.SATResult analyze(SharpSATSolver solver, Monitor monitor) throws Exception {
         return solver.hasSolution();
     }
 }
