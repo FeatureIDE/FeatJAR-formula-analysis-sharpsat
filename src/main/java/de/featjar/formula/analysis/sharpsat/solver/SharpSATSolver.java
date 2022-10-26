@@ -185,15 +185,15 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     }
 
     @Override
-    public SATResult hasSolution() {
+    public Result<Boolean> hasSolution() {
         final int comparision = countSolutions().compareTo(BigInteger.ZERO);
         switch (comparision) {
             case -1:
-                return SATResult.TIMEOUT;
+                return Result<Boolean>.TIMEOUT;
             case 0:
-                return SATResult.FALSE;
+                return Result<Boolean>.FALSE;
             case 1:
-                return SATResult.TRUE;
+                return Result<Boolean>.TRUE;
             default:
                 throw new IllegalStateException(String.valueOf(comparision));
         }
