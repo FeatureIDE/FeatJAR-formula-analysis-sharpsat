@@ -21,10 +21,10 @@
 package de.featjar.formula.analysis.sharpsat.solver;
 
 import de.featjar.formula.analysis.solver.SolverFormula;
-import de.featjar.formula.analysis.solver.RuntimeContradictionException;
+import de.featjar.formula.analysis.solver.SolverContradictionException;
 import de.featjar.formula.clauses.CNF;
 import de.featjar.formula.clauses.ClauseList;
-import de.featjar.formula.clauses.FormulaToCNF;
+import de.featjar.formula.clauses.ToCNF;
 import de.featjar.formula.clauses.LiteralList;
 import de.featjar.formula.structure.Expression;
 import de.featjar.formula.structure.map.TermMap;
@@ -42,8 +42,8 @@ public class SharpSatSolverFormula extends SolverFormula<LiteralList> {
     }
 
     @Override
-    public List<LiteralList> push(Expression expression) throws RuntimeContradictionException {
-        final ClauseList clauses = FormulaToCNF.convert(expression, termMap).getClauses();
+    public List<LiteralList> push(Expression expression) throws SolverContradictionException {
+        final ClauseList clauses = ToCNF.convert(expression, termMap).getClauses();
         clauses.forEach(this.solverFormulas::add);
         return clauses;
     }
