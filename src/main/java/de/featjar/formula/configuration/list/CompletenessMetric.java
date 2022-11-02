@@ -20,7 +20,9 @@
  */
 package de.featjar.formula.configuration.list;
 
+import de.featjar.base.data.Computation;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
+import de.featjar.formula.clauses.CNF;
 import de.featjar.formula.clauses.solutions.SolutionList;
 import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
 
@@ -34,16 +36,17 @@ import java.math.MathContext;
  */
 public class CompletenessMetric implements SampleMetric {
 
-    private ModelRepresentation rep;
+    private Computation<CNF> rep;
 
-    public CompletenessMetric(ModelRepresentation rep) {
+    public CompletenessMetric(Computation<CNF> rep) {
         this.rep = rep;
     }
 
     @Override
     public double get(SolutionList sample) {
         final BigDecimal totalSize = rep //
-                .getResult(new CountSolutionsAnalysis()) //
+                .then(CountSolutionsAnalysis::new) //
+                .getResult()
                 .map(BigDecimal::new) //
                 .orElseThrow();
         return totalSize.signum() > 0 //

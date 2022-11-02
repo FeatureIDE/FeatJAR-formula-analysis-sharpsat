@@ -20,46 +20,33 @@
  */
 package de.featjar.formula.analysis.sharpsat.solver;
 
-import de.featjar.bin.sharpsat.SharpSatBinary;
+import de.featjar.base.Feat;
+import de.featjar.base.data.Result;
+import de.featjar.base.io.IO;
+import de.featjar.bin.sharpsat.SharpSATBinary;
+import de.featjar.formula.analysis.solver.SolverContradictionException;
+import de.featjar.formula.assignment.Assignment;
+import de.featjar.formula.assignment.VariableAssignment;
 import de.featjar.formula.clauses.CNF;
 import de.featjar.formula.clauses.LiteralList;
 import de.featjar.formula.io.dimacs.DIMACSCNFFormat;
-import de.featjar.formula.structure.Expression;
-import de.featjar.formula.assignment.Assignment;
-import de.featjar.formula.assignment.VariableAssignment;
-import de.featjar.formula.structure.map.TermMap;
-import de.featjar.base.data.Pair;
-import de.featjar.base.io.IO;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpSATSolver {
-
-    public static final BigInteger INVALID_COUNT = BigInteger.valueOf(-1);
-
-    private final SharpSatSolverFormula formula;
+    private final SharpSATSolverFormula formula;
     private final VariableAssignment assumptions;
-
-    private final String[] command = new String[6];
 
     private long timeout = 0;
 
-    public SharpSATSolver(Expression modelExpression) {
-        final TermMap variables = modelExpression.getTermMap().orElseGet(TermMap::new);
-        formula = new SharpSatSolverFormula(variables);
-        modelExpression.getChildren().stream().map(c -> (Expression) c).forEach(formula::push);
-        assumptions = new VariableAssignment(variables);
-        command[0] = new SharpSatBinary().getPath().toString();
-        command[1] = "-noCC";
-        command[2] = "-noIBCP";
-        command[3] = "-t";
-        command[4] = String.valueOf(timeout);
+    public SharpSATSolver(CNF cnf) {
+        //final TermMap variables = modelExpression.getTermMap().orElseGet(TermMap::new);
+        formula = new SharpSATSolverFormula();
+        formula.push(cnf);
+        assumptions = new VariableAssignment();
     }
 
     private CNF simplifyCNF(CNF cnf) {
@@ -73,21 +60,21 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
                 }
             }
         }
-        for (final Pair<Integer, Object> entry : assumptions.get()) {
-            final int variable = entry.getKey();
-            final int literal = (entry.getValue() == Boolean.TRUE) ? variable : -variable;
-            if (unitClauses.add(literal) && unitClauses.contains(-literal)) {
-                return null;
-            }
-        }
+//        for (final Pair<Integer, Object> entry : assumptions.get()) {
+//            final int variable = entry.getKey();
+//            final int literal = (entry.getValue() == Boolean.TRUE) ? variable : -variable;
+//            if (unitClauses.add(literal) && unitClauses.contains(-literal)) {
+//                return null;
+//            }
+        //}
         if (!unitClauses.isEmpty()) {
-            final TermMap variables = cnf.getVariableMap();
+            //final TermMap variables = cnf.getVariableMap();
             int unitClauseCount = 0;
             while (unitClauseCount != unitClauses.size()) {
                 unitClauseCount = unitClauses.size();
-                if (unitClauseCount == variables.getVariableCount()) {
-                    return new CNF(new TermMap());
-                }
+//                if (unitClauseCount == variables.getVariableCount()) {
+//                    return new CNF(new VariableMap());
+//                }
                 final ArrayList<LiteralList> nonUnitClauses = new ArrayList<>();
                 clauseLoop:
                 for (final LiteralList clause : clauses) {
@@ -129,73 +116,60 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
                 clauses = nonUnitClauses;
             }
 
-            final TermMap newVariables = variables.clone();
-            unitClauses.stream().map(Math::abs).forEach(newVariables::removeVariable);
+            //final TermMap newVariables = variables.clone();
+            //unitClauses.stream().map(Math::abs).forEach(newVariables::removeVariable);
 
-            if (clauses.isEmpty()) {
-                return new CNF(newVariables);
-            }
-            cnf = new CNF(variables, clauses).adapt(newVariables).orElseThrow();
+//            if (clauses.isEmpty()) {
+//                return new CNF(newVariables);
+//            }
+            //cnf = new CNF(variables, clauses).adapt(newVariables).orElseThrow();
         }
         return cnf;
     }
 
     @Override
-    public BigInteger countSolutions() {
+    public Result<BigInteger> countSolutions() {
         try {
-            // final CNF cnf = simplifyCNF(formula.getCNF()); // variable map not adapted correctly
+            // final CNF cnf = simplifyCNF(formula.getCNF()); // todo: variable map not adapted correctly
             final CNF cnf = formula.getCNF();
             if (cnf == null) {
-                return BigInteger.ZERO;
+                return Result.of(BigInteger.ZERO);
             }
             if (cnf.getClauses().isEmpty()) {
-                return BigInteger.valueOf(2).pow(cnf.getVariableMap().getVariableCount());
+                return Result.of(BigInteger.valueOf(2).pow(cnf.getVariableMap().getVariableCount()));
             }
-            final Path tempFile = Files.createTempFile("sharpSATinput", ".dimacs");
-            try {
-                IO.save(cnf, tempFile, new DIMACSCNFFormat());
-
-                command[command.length - 1] = tempFile.toString();
-                final ProcessBuilder processBuilder = new ProcessBuilder(command);
-                Process process = null;
+            Feat.extension(SharpSATBinary.class).withTemporaryFile("sharpSATinput", ".dimacs", temp -> {
                 try {
-                    process = processBuilder.start();
-                    final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    final int exitValue = process.waitFor();
-                    if (exitValue == 0) {
-                        process = null;
-                        final BigInteger result =
-                                reader.lines().findFirst().map(BigInteger::new).orElse(BigInteger.ZERO);
-                        return result;
-                    } else {
-                        return INVALID_COUNT;
-                    }
-                } finally {
-                    if (process != null) {
-                        process.destroyForcibly();
-                    }
+                    IO.save(cnf, temp, new DIMACSCNFFormat());
+                } catch (IOException e) {
+                    return Result.empty(e);
                 }
-            } finally {
-                Files.deleteIfExists(tempFile);
-            }
+
+                return Feat.extension(SharpSATBinary.class)
+                        .execute("-noCC", "-noIBCP", "-t", String.valueOf(timeout), temp.toString())
+                        .map(lines -> lines
+                                .findFirst()
+                                .map(BigInteger::new)
+                                .orElse(BigInteger.ZERO));
+            });
         } catch (final Exception e) {
             Feat.log().error(e);
         }
-        return INVALID_COUNT;
+        return Result.empty();
     }
 
     @Override
     public Result<Boolean> hasSolution() {
-        final int comparision = countSolutions().compareTo(BigInteger.ZERO);
-        switch (comparision) {
+        final int comparison = countSolutions().map(c -> c.compareTo(BigInteger.ZERO)).orElse(-1);
+        switch (comparison) {
             case -1:
-                return Result<Boolean>.TIMEOUT;
+                return Result.empty();
             case 0:
-                return Result<Boolean>.FALSE;
+                return Result.of(false);
             case 1:
-                return Result<Boolean>.TRUE;
+                return Result.of(true);
             default:
-                throw new IllegalStateException(String.valueOf(comparision));
+                throw new IllegalStateException(String.valueOf(comparison));
         }
     }
 
@@ -208,17 +182,17 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     }
 
     @Override
-    public Assignment getAssumptions() {
+    public Assignment<?> getAssumptions() {
         return assumptions;
     }
 
     @Override
-    public SharpSatSolverFormula getSolverFormula() {
-        return formula;
+    public void setAssumptions(Assignment<?> assumptions) throws SolverContradictionException {
+        //todo
     }
 
     @Override
-    public TermMap getVariableMap() {
-        return formula.getVariableMap();
+    public SharpSATSolverFormula getSolverFormula() {
+        return formula;
     }
 }

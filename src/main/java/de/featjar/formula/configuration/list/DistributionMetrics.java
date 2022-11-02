@@ -20,17 +20,16 @@
  */
 package de.featjar.formula.configuration.list;
 
+import de.featjar.base.data.Computation;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
+import de.featjar.formula.clauses.CNF;
 import de.featjar.formula.clauses.ClauseList;
-import de.featjar.formula.clauses.Clauses;
-import de.featjar.formula.clauses.LiteralList;
+import de.featjar.formula.clauses.VariableMap;
 import de.featjar.formula.clauses.solutions.SolutionList;
 import de.featjar.formula.clauses.solutions.metrics.AggregatableMetrics;
 import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
-import de.featjar.formula.structure.Expression;
-import de.featjar.formula.structure.map.TermMap;
+
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
@@ -38,42 +37,42 @@ public class DistributionMetrics extends AggregatableMetrics {
 
     public static class RatioDiffFunction {
 
-        private final ModelRepresentation rep;
-        private final TermMap termMap;
+        private Computation<CNF> rep;
+        private final VariableMap termMap = null; //todo
         private final BigDecimal totalCount;
 
-        public RatioDiffFunction(ModelRepresentation rep) {
+        public RatioDiffFunction(Computation<CNF> rep) {
             this.rep = rep;
-            termMap = rep.getFormula().getVariableMap().orElseGet(TermMap::new);
-            final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-            totalCount = rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
+            //termMap = rep.getFormula().getVariableMap().orElseGet(TermMap::new);
+            totalCount = rep.then(CountSolutionsAnalysis::new).getResult().map(BigDecimal::new).orElseThrow();
         }
 
         public double compute(SolutionList sample, ClauseList expression) {
-            final double sampleSize = sample.getSolutions().size();
-            if (sampleSize == 0) {
-                return 0;
-            }
-            int positiveCount = 0;
-            for (final LiteralList solution : sample.getSolutions()) {
-                for (final LiteralList clause : expression) {
-                    if (solution.containsAll(clause)) {
-                        positiveCount++;
-                        break;
-                    }
-                }
-            }
-            final double sampleRatio = positiveCount / sampleSize;
-            final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-            final List<Expression> assumedConstraints = analysis.getAssumedConstraints();
-            for (final LiteralList clause : expression) {
-                assumedConstraints.add(Clauses.toOrClause(clause.negate(), termMap));
-            }
-            final BigDecimal negativeCount =
-                    rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
-            final double actualRatio =
-                    1 - negativeCount.divide(totalCount, MathContext.DECIMAL128).doubleValue();
-            return Math.abs(actualRatio - sampleRatio);
+//            final double sampleSize = sample.getSolutions().size();
+//            if (sampleSize == 0) {
+//                return 0;
+//            }
+//            int positiveCount = 0;
+//            for (final LiteralList solution : sample.getSolutions()) {
+//                for (final LiteralList clause : expression) {
+//                    if (solution.containsAll(clause)) {
+//                        positiveCount++;
+//                        break;
+//                    }
+//                }
+//            }
+//            final double sampleRatio = positiveCount / sampleSize;
+//            final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
+//            final List<Expression> assumedConstraints = analysis.getAssumedConstraints();
+//            for (final LiteralList clause : expression) {
+//                assumedConstraints.add(Clauses.toOrClause(clause.negate(), termMap));
+//            }
+//            final BigDecimal negativeCount =
+//                    rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
+//            final double actualRatio =
+//                    1 - negativeCount.divide(totalCount, MathContext.DECIMAL128).doubleValue();
+//            return Math.abs(actualRatio - sampleRatio);
+            return 0; //todo
         }
     }
 
@@ -81,16 +80,22 @@ public class DistributionMetrics extends AggregatableMetrics {
     private final List<ClauseList> expressionList;
     private final String functionName;
 
-    public DistributionMetrics(ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
+    public DistributionMetrics(RatioDiffFunction function, List<ClauseList> expressionList, String functionName) {
+        this.function = function;
         this.expressionList = expressionList;
         this.functionName = functionName;
-        function = rep != null ? new RatioDiffFunction(rep) : null;
     }
 
-    public static List<SampleMetric> getAllAggregates(
-            ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
-        return new DistributionMetrics(rep, expressionList, functionName).getAllAggregates();
-    }
+    //    public DistributionMetrics(ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
+//        this.expressionList = expressionList;
+//        this.functionName = functionName;
+//        function = rep != null ? new RatioDiffFunction(rep) : null;
+//    }
+//
+//    public static List<SampleMetric> getAllAggregates(
+//            ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
+//        return new DistributionMetrics(rep, expressionList, functionName).getAllAggregates();
+//    }
 
     @Override
     public SampleMetric getAggregate(String name, DoubleSupplier aggregate) {

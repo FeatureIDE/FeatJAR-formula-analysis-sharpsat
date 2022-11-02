@@ -20,37 +20,30 @@
  */
 package de.featjar.formula.analysis.sharpsat;
 
-import de.featjar.formula.analysis.Analysis;
-import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
-import de.featjar.formula.structure.Expression;
+import de.featjar.base.data.Computation;
+import de.featjar.base.data.FutureResult;
+import de.featjar.formula.assignment.VariableAssignment;
+import de.featjar.formula.clauses.CNF;
 
 /**
- * Base class for analyses using a {@link SharpSATSolver}.
- *
- * @param <T> the type of the analysis result.
+ * Counts the number of valid solutions to a formula.
  *
  * @author Sebastian Krieter
  */
-public abstract class SharpSatSolverAnalysis<T> extends Analysis<T, SharpSATSolver, Expression> {
-
-    protected int timeout = 30;
-
-    public SharpSatSolverAnalysis() {
-        solverInputComputation = FormulaComputation.empty();
+public class HasSolutionAnalysis extends SharpSATSolverAnalysis<Boolean> {
+    public HasSolutionAnalysis(Computation<CNF> inputComputation) {
+        super(inputComputation);
     }
 
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+    public HasSolutionAnalysis(Computation<CNF> inputComputation, VariableAssignment assumptions, long timeoutInMs, long randomSeed) {
+        super(inputComputation, assumptions, timeoutInMs, randomSeed);
     }
 
     @Override
-    protected SharpSATSolver createSolver(Expression input) {
-        return new SharpSATSolver(input);
-    }
-
-    @Override
-    protected void prepareSolver(SharpSATSolver solver) {
-        super.prepareSolver(solver);
-        solver.setTimeout(timeout);
+    public FutureResult<Boolean> compute() {
+        return initializeSolver().thenComputeResult(((solver, monitor) -> {
+            // todo: log output
+            return solver.hasSolution();
+        }));
     }
 }

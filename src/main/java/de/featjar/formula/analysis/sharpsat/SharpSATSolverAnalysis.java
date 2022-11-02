@@ -20,18 +20,25 @@
  */
 package de.featjar.formula.analysis.sharpsat;
 
+import de.featjar.base.data.Computation;
+import de.featjar.formula.analysis.Analysis;
 import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
-import de.featjar.formula.analysis.solver.SATSolver;
-import de.featjar.base.task.Monitor;
+import de.featjar.formula.assignment.VariableAssignment;
+import de.featjar.formula.clauses.CNF;
 
 /**
- * Counts the number of valid solutions to a formula.
+ * Base class for analyses using a {@link SharpSATSolver}.
+ *
+ * @param <T> the type of the analysis result.
  *
  * @author Sebastian Krieter
  */
-public class HasSolutionsAnalysis extends SharpSatSolverAnalysis<SATSolver.Result<Boolean>> {
-    @Override
-    protected SATSolver.Result<Boolean> analyze(SharpSATSolver solver, Monitor monitor) throws Exception {
-        return solver.hasSolution();
+public abstract class SharpSATSolverAnalysis<T> extends Analysis<T, SharpSATSolver, CNF> {
+    protected SharpSATSolverAnalysis(Computation<CNF> inputComputation) {
+        super(inputComputation, SharpSATSolver::new);
+    }
+
+    protected SharpSATSolverAnalysis(Computation<CNF> inputComputation, VariableAssignment assumptions, long timeoutInMs, long randomSeed) {
+        super(inputComputation, SharpSATSolver::new, assumptions, timeoutInMs, randomSeed);
     }
 }

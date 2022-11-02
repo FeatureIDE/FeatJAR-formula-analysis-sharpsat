@@ -22,12 +22,8 @@ package de.featjar.formula.analysis.sharpsat.solver;
 
 import de.featjar.formula.analysis.solver.SolverFormula;
 import de.featjar.formula.analysis.solver.SolverContradictionException;
-import de.featjar.formula.clauses.CNF;
-import de.featjar.formula.clauses.ClauseList;
-import de.featjar.formula.clauses.ToCNF;
-import de.featjar.formula.clauses.LiteralList;
-import de.featjar.formula.structure.Expression;
-import de.featjar.formula.structure.map.TermMap;
+import de.featjar.formula.clauses.*;
+import de.featjar.formula.structure.formula.Formula;
 import java.util.List;
 
 /**
@@ -35,17 +31,25 @@ import java.util.List;
  *
  * @author Sebastian Krieter
  */
-public class SharpSatSolverFormula extends SolverFormula<LiteralList> {
+public class SharpSATSolverFormula extends SolverFormula<LiteralList> {
+    VariableMap variableMap;
 
-    public SharpSatSolverFormula(TermMap termMap) {
-        super(termMap);
+    public SharpSATSolverFormula() {
+        super();
     }
 
     @Override
-    public List<LiteralList> push(Expression expression) throws SolverContradictionException {
-        final ClauseList clauses = ToCNF.convert(expression, termMap).getClauses();
-        clauses.forEach(this.solverFormulas::add);
+    public List<LiteralList> push(Formula expression) throws SolverContradictionException {
+        //final ClauseList clauses = ToCNF.convert(expression, termMap).getClauses();
+        final ClauseList clauses = ToCNF.convert(expression).get().getClauses();
+        this.solverFormulas.addAll(clauses);
+        variableMap = VariableMap.of(expression);
         return clauses;
+    }
+
+    public List<LiteralList> push(CNF cnf) throws SolverContradictionException {
+        this.solverFormulas.addAll(cnf.getClauses());
+        return cnf.getClauses();
     }
 
     @Override
@@ -54,6 +58,7 @@ public class SharpSatSolverFormula extends SolverFormula<LiteralList> {
     }
 
     public CNF getCNF() {
-        return new CNF(termMap, solverFormulas);
+        //return new CNF(termMap, solverFormulas);
+        return new CNF(variableMap, solverFormulas);
     }
 }

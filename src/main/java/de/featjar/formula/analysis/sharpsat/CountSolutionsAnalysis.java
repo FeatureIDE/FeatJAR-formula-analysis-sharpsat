@@ -20,8 +20,10 @@
  */
 package de.featjar.formula.analysis.sharpsat;
 
-import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
-import de.featjar.base.task.Monitor;
+import de.featjar.base.data.Computation;
+import de.featjar.base.data.FutureResult;
+import de.featjar.formula.assignment.VariableAssignment;
+import de.featjar.formula.clauses.CNF;
 
 import java.math.BigInteger;
 
@@ -30,9 +32,20 @@ import java.math.BigInteger;
  *
  * @author Sebastian Krieter
  */
-public class CountSolutionsAnalysis extends SharpSatSolverAnalysis<BigInteger> {
+public class CountSolutionsAnalysis extends SharpSATSolverAnalysis<BigInteger> {
+    public CountSolutionsAnalysis(Computation<CNF> inputComputation) {
+        super(inputComputation);
+    }
+
+    public CountSolutionsAnalysis(Computation<CNF> inputComputation, VariableAssignment assumptions, long timeoutInMs, long randomSeed) {
+        super(inputComputation, assumptions, timeoutInMs, randomSeed);
+    }
+
     @Override
-    protected BigInteger analyze(SharpSATSolver solver, Monitor monitor) throws Exception {
-        return solver.countSolutions();
+    public FutureResult<BigInteger> compute() {
+        return initializeSolver().thenComputeResult(((solver, monitor) -> {
+            // todo: log output
+            return solver.countSolutions();
+        }));
     }
 }
