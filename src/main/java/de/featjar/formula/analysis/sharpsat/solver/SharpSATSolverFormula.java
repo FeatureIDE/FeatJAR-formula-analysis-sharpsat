@@ -20,13 +20,9 @@
  */
 package de.featjar.formula.analysis.sharpsat.solver;
 
-import de.featjar.formula.analysis.sat.LiteralMatrix;
-import de.featjar.formula.analysis.sat.VariableMap;
 import de.featjar.formula.analysis.solver.SolverFormula;
 import de.featjar.formula.analysis.solver.SolverContradictionException;
-import de.featjar.formula.sat.*;
-import de.featjar.formula.analysis.sat.clause.CNF;
-import de.featjar.formula.analysis.sat.clause.ToCNF;
+import de.featjar.formula.clauses.*;
 import de.featjar.formula.structure.formula.Formula;
 import java.util.List;
 
@@ -35,7 +31,7 @@ import java.util.List;
  *
  * @author Sebastian Krieter
  */
-public class SharpSATSolverFormula extends SolverFormula<SortedIntegerList> {
+public class SharpSATSolverFormula extends SolverFormula<LiteralList> {
     VariableMap variableMap;
 
     public SharpSATSolverFormula() {
@@ -43,17 +39,17 @@ public class SharpSATSolverFormula extends SolverFormula<SortedIntegerList> {
     }
 
     @Override
-    public List<SortedIntegerList> push(Formula expression) throws SolverContradictionException {
+    public List<LiteralList> push(Formula expression) throws SolverContradictionException {
         //final ClauseList clauses = ToCNF.convert(expression, termMap).getClauses();
-        final LiteralMatrix clauses = ToCNF.convert(expression).get().getClauseList();
+        final ClauseList clauses = ToCNF.convert(expression).get().getClauses();
         this.solverFormulas.addAll(clauses);
         variableMap = VariableMap.of(expression);
         return clauses;
     }
 
-    public List<SortedIntegerList> push(CNF cnf) throws SolverContradictionException {
-        this.solverFormulas.addAll(cnf.getClauseList());
-        return cnf.getClauseList();
+    public List<LiteralList> push(CNF cnf) throws SolverContradictionException {
+        this.solverFormulas.addAll(cnf.getClauses());
+        return cnf.getClauses();
     }
 
     @Override

@@ -23,8 +23,8 @@ package de.featjar.formula.analysis.sharpsat;
 import de.featjar.base.data.Computation;
 import de.featjar.formula.analysis.Analysis;
 import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
-import de.featjar.formula.analysis.Assignment;
-import de.featjar.formula.analysis.sat.clause.CNF;
+import de.featjar.formula.assignment.VariableAssignment;
+import de.featjar.formula.clauses.CNF;
 
 /**
  * Base class for analyses using a {@link SharpSATSolver}.
@@ -38,7 +38,7 @@ public abstract class SharpSATSolverAnalysis<T> extends Analysis<T, SharpSATSolv
         super(inputComputation, SharpSATSolver::new);
     }
 
-    protected SharpSATSolverAnalysis(Computation<CNF> inputComputation, Assignment assumptions, long timeoutInMs, long randomSeed) {
+    protected SharpSATSolverAnalysis(Computation<CNF> inputComputation, VariableAssignment assumptions, long timeoutInMs, long randomSeed) {
         super(inputComputation, SharpSATSolver::new, assumptions, timeoutInMs, randomSeed);
     }
 }

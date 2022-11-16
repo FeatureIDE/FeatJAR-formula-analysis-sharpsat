@@ -22,9 +22,9 @@ package de.featjar.formula.configuration.list;
 
 import de.featjar.base.data.Computation;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
-import de.featjar.formula.analysis.sat.clause.CNF;
-import de.featjar.formula.analysis.sat.solution.SolutionList;
-import de.featjar.formula.analysis.sat.solution.metrics.SampleMetric;
+import de.featjar.formula.clauses.CNF;
+import de.featjar.formula.clauses.solutions.SolutionList;
+import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
