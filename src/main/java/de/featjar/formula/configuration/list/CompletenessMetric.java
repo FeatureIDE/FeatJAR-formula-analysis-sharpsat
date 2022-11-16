@@ -23,7 +23,7 @@ package de.featjar.formula.configuration.list;
 import de.featjar.base.data.Computation;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.analysis.bool.BooleanSolutionList;
-import de.featjar.formula.analysis.todo.metrics.SampleMetric;
+import de.featjar.formula.analysis.metrics.SampleMetric;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

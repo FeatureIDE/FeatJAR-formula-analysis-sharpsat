@@ -25,8 +25,8 @@ import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.analysis.bool.BooleanAssignmentList;
 import de.featjar.formula.analysis.bool.VariableMap;
 import de.featjar.formula.analysis.bool.BooleanSolutionList;
-import de.featjar.formula.analysis.todo.metrics.AggregatableMetrics;
-import de.featjar.formula.analysis.todo.metrics.SampleMetric;
+import de.featjar.formula.analysis.metrics.AggregatableMetrics;
+import de.featjar.formula.analysis.metrics.SampleMetric;
 
 import java.math.BigDecimal;
 import java.util.List;
