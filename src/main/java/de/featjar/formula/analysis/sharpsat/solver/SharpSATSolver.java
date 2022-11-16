@@ -26,6 +26,7 @@ import de.featjar.base.io.IO;
 import de.featjar.bin.sharpsat.SharpSATBinary;
 import de.featjar.formula.analysis.solver.SolverContradictionException;
 import de.featjar.formula.analysis.solver.Assumable;
+import de.featjar.formula.analysis.Assignment;
 import de.featjar.formula.analysis.sat.clause.CNF;
 import de.featjar.formula.io.dimacs.DIMACSCNFFormat;
 
