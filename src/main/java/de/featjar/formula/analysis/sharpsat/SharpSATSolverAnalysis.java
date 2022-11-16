@@ -23,8 +23,6 @@ package de.featjar.formula.analysis.sharpsat;
 import de.featjar.base.data.Computation;
 import de.featjar.formula.analysis.Analysis;
 import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
-import de.featjar.formula.analysis.Assignment;
-import de.featjar.formula.analysis.sat.clause.CNF;
 
 /**
  * Base class for analyses using a {@link SharpSATSolver}.
