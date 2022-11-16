@@ -186,7 +186,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     }
 
     @Override
-    public void setAssumptionList(Assumable<?> assumptions) throws SolverContradictionException {
+    public void setAssumptions(Assumable<?> assumptions) throws SolverContradictionException {
         //todo
     }
 
