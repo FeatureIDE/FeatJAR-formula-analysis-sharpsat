@@ -22,9 +22,8 @@ package de.featjar.formula.configuration.list;
 
 import de.featjar.base.data.Computation;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
-import de.featjar.formula.analysis.sat.clause.CNF;
-import de.featjar.formula.analysis.sat.solution.SolutionList;
-import de.featjar.formula.analysis.sat.solution.metrics.SampleMetric;
+import de.featjar.formula.analysis.bool.BooleanSolutionList;
+import de.featjar.formula.analysis.metrics.SampleMetric;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -43,7 +42,7 @@ public class CompletenessMetric implements SampleMetric {
     }
 
     @Override
-    public double get(SolutionList sample) {
+    public double get(BooleanSolutionList sample) {
         final BigDecimal totalSize = rep //
                 .then(CountSolutionsAnalysis::new) //
                 .getResult()

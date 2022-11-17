@@ -22,8 +22,6 @@ package de.featjar.formula.analysis.sharpsat;
 
 import de.featjar.base.data.Computation;
 import de.featjar.base.data.FutureResult;
-import de.featjar.formula.analysis.Assignment;
-import de.featjar.formula.analysis.sat.clause.CNF;
 
 /**
  * Counts the number of valid solutions to a formula.
