@@ -25,10 +25,9 @@ import de.featjar.base.data.Result;
 import de.featjar.base.io.IO;
 import de.featjar.bin.sharpsat.SharpSATBinary;
 import de.featjar.formula.analysis.solver.SolverContradictionException;
-import de.featjar.formula.assignment.Assignment;
-import de.featjar.formula.assignment.VariableAssignment;
-import de.featjar.formula.clauses.CNF;
-import de.featjar.formula.clauses.LiteralList;
+import de.featjar.formula.analysis.solver.Assumable;
+import de.featjar.formula.analysis.Assignment;
+import de.featjar.formula.analysis.sat.clause.CNF;
 import de.featjar.formula.io.dimacs.DIMACSCNFFormat;
 
 import java.io.IOException;
@@ -38,7 +37,7 @@ import java.util.HashSet;
 
 public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpSATSolver {
     private final SharpSATSolverFormula formula;
-    private final VariableAssignment assumptions;
+    private final Assignment assumptions;
 
     private long timeout = 0;
 
@@ -46,15 +45,15 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
         //final TermMap variables = modelExpression.getTermMap().orElseGet(TermMap::new);
         formula = new SharpSATSolverFormula();
         formula.push(cnf);
-        assumptions = new VariableAssignment();
+        assumptions = new Assignment();
     }
 
     private CNF simplifyCNF(CNF cnf) {
         final HashSet<Integer> unitClauses = new HashSet<>();
-        ArrayList<LiteralList> clauses = cnf.getClauses();
-        for (final LiteralList clause : clauses) {
-            if (clause.size() == 1) {
-                final int literal = clause.getLiterals()[0];
+        ArrayList<SortedIntegerList> sortedIntegerLists = cnf.getClauseList();
+        for (final SortedIntegerList sortedIntegerList : sortedIntegerLists) {
+            if (sortedIntegerList.size() == 1) {
+                final int literal = sortedIntegerList.getIntegers()[0];
                 if (unitClauses.add(literal) && unitClauses.contains(-literal)) {
                     return null;
                 }
@@ -75,11 +74,11 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
 //                if (unitClauseCount == variables.getVariableCount()) {
 //                    return new CNF(new VariableMap());
 //                }
-                final ArrayList<LiteralList> nonUnitClauses = new ArrayList<>();
+                final ArrayList<SortedIntegerList> nonUnitSortedIntegerLists = new ArrayList<>();
                 clauseLoop:
-                for (final LiteralList clause : clauses) {
-                    if (clause.size() > 1) {
-                        int[] literals = clause.getLiterals();
+                for (final SortedIntegerList sortedIntegerList : sortedIntegerLists) {
+                    if (sortedIntegerList.size() > 1) {
+                        int[] literals = sortedIntegerList.getIntegers();
                         int deadLiterals = 0;
                         for (int i = 0; i < literals.length; i++) {
                             final int literal = literals[i];
@@ -99,7 +98,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
                                 }
                             }
                             if (newLiterals.length > 1) {
-                                nonUnitClauses.add(new LiteralList(newLiterals, clause.getOrder(), false));
+                                nonUnitSortedIntegerLists.add(new SortedIntegerList(newLiterals, sortedIntegerList.getOrder(), false));
                             } else if (newLiterals.length == 1) {
                                 final int literal = newLiterals[0];
                                 if (unitClauses.add(literal) && unitClauses.contains(-literal)) {
@@ -109,11 +108,11 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
                                 return null;
                             }
                         } else {
-                            nonUnitClauses.add(clause);
+                            nonUnitSortedIntegerLists.add(sortedIntegerList);
                         }
                     }
                 }
-                clauses = nonUnitClauses;
+                sortedIntegerLists = nonUnitSortedIntegerLists;
             }
 
             //final TermMap newVariables = variables.clone();
@@ -135,7 +134,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
             if (cnf == null) {
                 return Result.of(BigInteger.ZERO);
             }
-            if (cnf.getClauses().isEmpty()) {
+            if (cnf.getClauseList().isEmpty()) {
                 return Result.of(BigInteger.valueOf(2).pow(cnf.getVariableMap().getVariableCount()));
             }
             Feat.extension(SharpSATBinary.class).withTemporaryFile("sharpSATinput", ".dimacs", temp -> {
@@ -182,12 +181,12 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     }
 
     @Override
-    public Assignment<?> getAssumptions() {
+    public Assumable<?> getAssumptionList() {
         return assumptions;
     }
 
     @Override
-    public void setAssumptions(Assignment<?> assumptions) throws SolverContradictionException {
+    public void setAssumptions(Assumable<?> assumptions) throws SolverContradictionException {
         //todo
     }
 

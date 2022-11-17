@@ -22,12 +22,12 @@ package de.featjar.formula.configuration.list;
 
 import de.featjar.base.data.Computation;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
-import de.featjar.formula.clauses.CNF;
-import de.featjar.formula.clauses.ClauseList;
-import de.featjar.formula.clauses.VariableMap;
-import de.featjar.formula.clauses.solutions.SolutionList;
-import de.featjar.formula.clauses.solutions.metrics.AggregatableMetrics;
-import de.featjar.formula.clauses.solutions.metrics.SampleMetric;
+import de.featjar.formula.analysis.sat.clause.CNF;
+import de.featjar.formula.analysis.sat.LiteralMatrix;
+import de.featjar.formula.analysis.sat.VariableMap;
+import de.featjar.formula.analysis.sat.solution.SolutionList;
+import de.featjar.formula.analysis.sat.solution.metrics.AggregatableMetrics;
+import de.featjar.formula.analysis.sat.solution.metrics.SampleMetric;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -47,7 +47,7 @@ public class DistributionMetrics extends AggregatableMetrics {
             totalCount = rep.then(CountSolutionsAnalysis::new).getResult().map(BigDecimal::new).orElseThrow();
         }
 
-        public double compute(SolutionList sample, ClauseList expression) {
+        public double compute(SolutionList sample, LiteralMatrix expression) {
 //            final double sampleSize = sample.getSolutions().size();
 //            if (sampleSize == 0) {
 //                return 0;
@@ -77,10 +77,10 @@ public class DistributionMetrics extends AggregatableMetrics {
     }
 
     private final RatioDiffFunction function;
-    private final List<ClauseList> expressionList;
+    private final List<LiteralMatrix> expressionList;
     private final String functionName;
 
-    public DistributionMetrics(RatioDiffFunction function, List<ClauseList> expressionList, String functionName) {
+    public DistributionMetrics(RatioDiffFunction function, List<LiteralMatrix> expressionList, String functionName) {
         this.function = function;
         this.expressionList = expressionList;
         this.functionName = functionName;
@@ -106,7 +106,7 @@ public class DistributionMetrics extends AggregatableMetrics {
     public double[] computeValues() {
         final double[] values = new double[expressionList.size()];
         int index = 0;
-        for (final ClauseList expression : expressionList) {
+        for (final LiteralMatrix expression : expressionList) {
             values[index++] = function.compute(sample, expression);
         }
         return values;
