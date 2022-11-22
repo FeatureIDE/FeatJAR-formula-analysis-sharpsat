@@ -42,7 +42,7 @@ public class CountSolutionsAnalysis extends SharpSATSolverAnalysis<BigInteger> {
     @Override
     public FutureResult<BigInteger> compute() {
         return initializeSolver().thenComputeResult(((solver, monitor) -> {
-            // todo: log output
+            // TODO: log output
             return solver.countSolutions();
         }));
     }

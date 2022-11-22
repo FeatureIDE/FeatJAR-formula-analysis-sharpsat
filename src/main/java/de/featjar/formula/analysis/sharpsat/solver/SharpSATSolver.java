@@ -126,7 +126,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     @Override
     public Result<BigInteger> countSolutions() {
         try {
-            // final CNF cnf = simplifyCNF(formula.getCNF()); // todo: variable map not adapted correctly
+            // final CNF cnf = simplifyCNF(formula.getCNF()); // TODO: variable map not adapted correctly
             final CNF cnf = formula.getCNF();
             if (cnf == null) {
                 return Result.of(BigInteger.ZERO);
@@ -184,7 +184,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
 
     @Override
     public void setAssumptionList(Assumable<?> assumptions) throws SolverContradictionException {
-        //todo
+        //TODO
     }
 
     @Override

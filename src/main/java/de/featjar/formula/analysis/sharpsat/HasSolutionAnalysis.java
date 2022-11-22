@@ -40,7 +40,7 @@ public class HasSolutionAnalysis extends SharpSATSolverAnalysis<Boolean> {
     @Override
     public FutureResult<Boolean> compute() {
         return initializeSolver().thenComputeResult(((solver, monitor) -> {
-            // todo: log output
+            // TODO: log output
             return solver.hasSolution();
         }));
     }

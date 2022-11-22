@@ -37,7 +37,7 @@ public class DistributionMetrics extends AggregatableMetrics {
     public static class RatioDiffFunction {
 
         private Computation<CNF> rep;
-        private final VariableMap termMap = null; //todo
+        private final VariableMap termMap = null; //TODO
         private final BigDecimal totalCount;
 
         public RatioDiffFunction(Computation<CNF> rep) {
@@ -71,7 +71,7 @@ public class DistributionMetrics extends AggregatableMetrics {
 //            final double actualRatio =
 //                    1 - negativeCount.divide(totalCount, MathContext.DECIMAL128).doubleValue();
 //            return Math.abs(actualRatio - sampleRatio);
-            return 0; //todo
+            return 0; //TODO
         }
     }
 
