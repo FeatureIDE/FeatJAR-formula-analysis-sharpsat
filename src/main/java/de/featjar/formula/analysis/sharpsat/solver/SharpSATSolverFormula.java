@@ -21,7 +21,7 @@
 package de.featjar.formula.analysis.sharpsat.solver;
 
 import de.featjar.formula.analysis.bool.BooleanAssignmentList;
-import de.featjar.formula.analysis.bool.VariableMap;
+import de.featjar.formula.analysis.mapping.VariableMap;
 import de.featjar.formula.sat.*;
 import de.featjar.formula.analysis.bool.ToBooleanClauseList;
 import de.featjar.formula.structure.formula.Formula;

@@ -23,7 +23,7 @@ package de.featjar.formula.configuration.list;
 import de.featjar.base.data.Computation;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.analysis.bool.BooleanAssignmentList;
-import de.featjar.formula.analysis.bool.VariableMap;
+import de.featjar.formula.analysis.mapping.VariableMap;
 import de.featjar.formula.analysis.bool.BooleanSolutionList;
 import de.featjar.formula.analysis.metrics.AggregatableMetrics;
 import de.featjar.formula.analysis.metrics.SampleMetric;
@@ -43,7 +43,7 @@ public class DistributionMetrics extends AggregatableMetrics {
         public RatioDiffFunction(Computation<CNF> rep) {
             this.rep = rep;
             //termMap = rep.getFormula().getVariableMap().orElseGet(TermMap::new);
-            totalCount = rep.then(CountSolutionsAnalysis::new).getResult().map(BigDecimal::new).orElseThrow();
+            totalCount = rep.map(CountSolutionsAnalysis::new).getResult().map(BigDecimal::new).orElseThrow();
         }
 
         public double compute(BooleanSolutionList sample, BooleanAssignmentList expression) {
