@@ -20,8 +20,8 @@
  */
 package de.featjar.formula.analysis.sharpsat;
 
-import de.featjar.base.data.Computation;
-import de.featjar.base.data.FutureResult;
+import de.featjar.base.computation.Computable;
+import de.featjar.base.computation.FutureResult;
 
 import java.math.BigInteger;
 
@@ -31,12 +31,12 @@ import java.math.BigInteger;
  * @author Sebastian Krieter
  */
 public class CountSolutionsAnalysis extends SharpSATSolverAnalysis<BigInteger> {
-    public CountSolutionsAnalysis(Computation<CNF> inputComputation) {
-        super(inputComputation);
+    public CountSolutionsAnalysis(Computable<CNF> inputComputable) {
+        super(inputComputable);
     }
 
-    public CountSolutionsAnalysis(Computation<CNF> inputComputation, Assignment assumptions, long timeoutInMs, long randomSeed) {
-        super(inputComputation, assumptions, timeoutInMs, randomSeed);
+    public CountSolutionsAnalysis(Computable<CNF> inputComputable, Assignment assumptions, long timeoutInMs, long randomSeed) {
+        super(inputComputable, assumptions, timeoutInMs, randomSeed);
     }
 
     @Override

@@ -20,7 +20,7 @@
  */
 package de.featjar.formula.configuration.list;
 
-import de.featjar.base.data.Computation;
+import de.featjar.base.computation.Computable;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.analysis.bool.BooleanSolutionList;
 import de.featjar.formula.analysis.metrics.SampleMetric;
@@ -35,9 +35,9 @@ import java.math.MathContext;
  */
 public class CompletenessMetric implements SampleMetric {
 
-    private Computation<CNF> rep;
+    private Computable<CNF> rep;
 
-    public CompletenessMetric(Computation<CNF> rep) {
+    public CompletenessMetric(Computable<CNF> rep) {
         this.rep = rep;
     }
 

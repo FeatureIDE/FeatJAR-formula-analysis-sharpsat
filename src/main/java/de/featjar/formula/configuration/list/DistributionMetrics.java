@@ -20,7 +20,7 @@
  */
 package de.featjar.formula.configuration.list;
 
-import de.featjar.base.data.Computation;
+import de.featjar.base.computation.Computable;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.analysis.bool.BooleanAssignmentList;
 import de.featjar.formula.analysis.VariableMap;
@@ -36,11 +36,11 @@ public class DistributionMetrics extends AggregatableMetrics {
 
     public static class RatioDiffFunction {
 
-        private Computation<CNF> rep;
+        private Computable<CNF> rep;
         private final VariableMap termMap = null; //TODO
         private final BigDecimal totalCount;
 
-        public RatioDiffFunction(Computation<CNF> rep) {
+        public RatioDiffFunction(Computable<CNF> rep) {
             this.rep = rep;
             //termMap = rep.getFormula().getVariableMap().orElseGet(TermMap::new);
             totalCount = rep.map(CountSolutionsAnalysis::new).getResult().map(BigDecimal::new).orElseThrow();

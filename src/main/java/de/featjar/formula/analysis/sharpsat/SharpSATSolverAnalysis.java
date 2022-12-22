@@ -20,8 +20,8 @@
  */
 package de.featjar.formula.analysis.sharpsat;
 
-import de.featjar.base.data.Computation;
-import de.featjar.formula.analysis.Analysis;
+import de.featjar.base.computation.Computable;
+import de.featjar.formula.analysis.FormulaAnalysis;
 import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
 
 /**
@@ -31,12 +31,12 @@ import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
  *
  * @author Sebastian Krieter
  */
-public abstract class SharpSATSolverAnalysis<T> extends Analysis<T, SharpSATSolver, CNF> {
-    protected SharpSATSolverAnalysis(Computation<CNF> inputComputation) {
-        super(inputComputation, SharpSATSolver::new);
+public abstract class SharpSATSolverAnalysis<T> extends FormulaAnalysis<T, SharpSATSolver, CNF> {
+    protected SharpSATSolverAnalysis(Computable<CNF> inputComputable) {
+        super(inputComputable, SharpSATSolver::new);
     }
 
-    protected SharpSATSolverAnalysis(Computation<CNF> inputComputation, Assignment assumptions, long timeoutInMs, long randomSeed) {
-        super(inputComputation, SharpSATSolver::new, assumptions, timeoutInMs, randomSeed);
+    protected SharpSATSolverAnalysis(Computable<CNF> inputComputable, Assignment assumptions, long timeoutInMs, long randomSeed) {
+        super(inputComputable, SharpSATSolver::new, assumptions, timeoutInMs, randomSeed);
     }
 }
