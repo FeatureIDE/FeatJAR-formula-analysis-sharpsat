@@ -20,7 +20,7 @@
  */
 package de.featjar.formula.analysis.sharpsat;
 
-import de.featjar.base.computation.Computable;
+import de.featjar.base.computation.IComputation;
 import de.featjar.base.computation.FutureResult;
 
 /**
@@ -29,12 +29,12 @@ import de.featjar.base.computation.FutureResult;
  * @author Sebastian Krieter
  */
 public class HasSolutionAnalysis extends SharpSATSolverAnalysis<Boolean> {
-    public HasSolutionAnalysis(Computable<CNF> inputComputable) {
-        super(inputComputable);
+    public HasSolutionAnalysis(IComputation<CNF> inputComputation) {
+        super(inputComputation);
     }
 
-    public HasSolutionAnalysis(Computable<CNF> inputComputable, Assignment assumptions, long timeoutInMs, long randomSeed) {
-        super(inputComputable, assumptions, timeoutInMs, randomSeed);
+    public HasSolutionAnalysis(IComputation<CNF> inputComputation, Assignment assumptions, long timeoutInMs, long randomSeed) {
+        super(inputComputation, assumptions, timeoutInMs, randomSeed);
     }
 
     @Override
