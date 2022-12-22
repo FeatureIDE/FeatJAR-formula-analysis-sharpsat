@@ -20,11 +20,11 @@
  */
 package de.featjar.formula.analysis.sharpsat.solver;
 
-import de.featjar.formula.analysis.bool.BooleanAssignmentList;
+import de.featjar.formula.analysis.bool.ABooleanAssignmentList;
 import de.featjar.formula.analysis.VariableMap;
 import de.featjar.formula.sat.*;
-import de.featjar.formula.analysis.bool.ComputeBooleanRepresentation;
-import de.featjar.formula.structure.formula.Formula;
+import de.featjar.formula.analysis.bool.AComputeBooleanRepresentation;
+import de.featjar.formula.structure.formula.IFormula;
 import java.util.List;
 
 /**
@@ -40,9 +40,9 @@ public class SharpSATSolverFormula extends SolverFormula<SortedIntegerList> {
     }
 
     @Override
-    public List<SortedIntegerList> push(Formula expression) throws SolverContradictionException {
+    public List<SortedIntegerList> push(IFormula expression) throws SolverContradictionException {
         //final ClauseList clauses = ToCNF.convert(expression, termMap).getClauses();
-        final BooleanAssignmentList clauses = ComputeBooleanRepresentation.convert(expression).get().getClauseList();
+        final ABooleanAssignmentList clauses = AComputeBooleanRepresentation.convert(expression).get().getClauseList();
         this.solverFormulas.addAll(clauses);
         variableMap = VariableMap.of(expression);
         return clauses;

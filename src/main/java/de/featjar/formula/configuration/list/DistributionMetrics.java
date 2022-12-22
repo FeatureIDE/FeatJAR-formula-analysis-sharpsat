@@ -22,17 +22,17 @@ package de.featjar.formula.configuration.list;
 
 import de.featjar.base.computation.IComputation;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
-import de.featjar.formula.analysis.bool.BooleanAssignmentList;
+import de.featjar.formula.analysis.bool.ABooleanAssignmentList;
 import de.featjar.formula.analysis.VariableMap;
 import de.featjar.formula.analysis.bool.BooleanSolutionList;
-import de.featjar.formula.analysis.metrics.AggregatableMetrics;
-import de.featjar.formula.analysis.metrics.SampleMetric;
+import de.featjar.formula.analysis.metrics.AAggregatableMetrics;
+import de.featjar.formula.analysis.metrics.ISampleMetric;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
-public class DistributionMetrics extends AggregatableMetrics {
+public class DistributionMetrics extends AAggregatableMetrics {
 
     public static class RatioDiffFunction {
 
@@ -46,7 +46,7 @@ public class DistributionMetrics extends AggregatableMetrics {
             totalCount = rep.map(CountSolutionsAnalysis::new).getResult().map(BigDecimal::new).orElseThrow();
         }
 
-        public double compute(BooleanSolutionList sample, BooleanAssignmentList expression) {
+        public double compute(BooleanSolutionList sample, ABooleanAssignmentList expression) {
 //            final double sampleSize = sample.getSolutions().size();
 //            if (sampleSize == 0) {
 //                return 0;
@@ -76,10 +76,10 @@ public class DistributionMetrics extends AggregatableMetrics {
     }
 
     private final RatioDiffFunction function;
-    private final List<BooleanAssignmentList> expressionList;
+    private final List<ABooleanAssignmentList> expressionList;
     private final String functionName;
 
-    public DistributionMetrics(RatioDiffFunction function, List<BooleanAssignmentList> expressionList, String functionName) {
+    public DistributionMetrics(RatioDiffFunction function, List<ABooleanAssignmentList> expressionList, String functionName) {
         this.function = function;
         this.expressionList = expressionList;
         this.functionName = functionName;
@@ -97,7 +97,7 @@ public class DistributionMetrics extends AggregatableMetrics {
 //    }
 
     @Override
-    public SampleMetric getAggregate(String name, DoubleSupplier aggregate) {
+    public ISampleMetric getAggregate(String name, DoubleSupplier aggregate) {
         return new DoubleMetric(functionName + "_distribution_" + name, aggregate);
     }
 
@@ -105,7 +105,7 @@ public class DistributionMetrics extends AggregatableMetrics {
     public double[] computeValues() {
         final double[] values = new double[expressionList.size()];
         int index = 0;
-        for (final BooleanAssignmentList expression : expressionList) {
+        for (final ABooleanAssignmentList expression : expressionList) {
             values[index++] = function.compute(sample, expression);
         }
         return values;

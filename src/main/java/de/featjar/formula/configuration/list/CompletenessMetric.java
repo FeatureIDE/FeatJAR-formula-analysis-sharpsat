@@ -23,7 +23,7 @@ package de.featjar.formula.configuration.list;
 import de.featjar.base.computation.IComputation;
 import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.analysis.bool.BooleanSolutionList;
-import de.featjar.formula.analysis.metrics.SampleMetric;
+import de.featjar.formula.analysis.metrics.ISampleMetric;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -33,7 +33,7 @@ import java.math.MathContext;
  *
  * @author Sebastian Krieter
  */
-public class CompletenessMetric implements SampleMetric {
+public class CompletenessMetric implements ISampleMetric {
 
     private IComputation<CNF> rep;
 
