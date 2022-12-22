@@ -21,7 +21,6 @@
 package de.featjar.formula.analysis.sharpsat;
 
 import de.featjar.base.computation.IComputation;
-import de.featjar.formula.analysis.IFormulaAnalysis;
 import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
 
 /**
@@ -31,7 +30,7 @@ import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
  *
  * @author Sebastian Krieter
  */
-public abstract class SharpSATSolverAnalysis<T> extends IFormulaAnalysis<T, SharpSATSolver, CNF> {
+public abstract class SharpSATSolverAnalysis<T> {
     protected SharpSATSolverAnalysis(IComputation<CNF> inputComputation) {
         super(inputComputation, SharpSATSolver::new);
     }
