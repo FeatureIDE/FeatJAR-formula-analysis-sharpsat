@@ -20,7 +20,6 @@
  */
 package de.featjar.formula.analysis.sharpsat.solver;
 
-import de.featjar.base.Feat;
 import de.featjar.base.data.Result;
 import de.featjar.base.io.IO;
 import de.featjar.bin.sharpsat.SharpSATBinary;
@@ -134,14 +133,14 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
             if (cnf.getClauseList().isEmpty()) {
                 return Result.of(BigInteger.valueOf(2).pow(cnf.getVariableMap().getVariableCount()));
             }
-            Feat.extension(SharpSATBinary.class).withTemporaryFile("sharpSATinput", ".dimacs", temp -> {
+            FeatJAR.extension(SharpSATBinary.class).withTemporaryFile("sharpSATinput", ".dimacs", temp -> {
                 try {
                     IO.save(cnf, temp, new DIMACSCNFFormat());
                 } catch (IOException e) {
                     return Result.empty(e);
                 }
 
-                return Feat.extension(SharpSATBinary.class)
+                return FeatJAR.extension(SharpSATBinary.class)
                         .execute("-noCC", "-noIBCP", "-t", String.valueOf(timeout), temp.toString())
                         .map(lines -> lines
                                 .findFirst()
@@ -149,7 +148,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
                                 .orElse(BigInteger.ZERO));
             });
         } catch (final Exception e) {
-            Feat.log().error(e);
+            FeatJAR.log().error(e);
         }
         return Result.empty();
     }
