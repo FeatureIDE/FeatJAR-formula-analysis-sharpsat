@@ -177,7 +177,7 @@ public class SharpSATSolver implements de.featjar.formula.analysis.solver.SharpS
     }
 
     @Override
-    public Assumable<?> getAssumptionList() {
+    public Assumable<?> getAssignment() {
         return assumptions;
     }
 
