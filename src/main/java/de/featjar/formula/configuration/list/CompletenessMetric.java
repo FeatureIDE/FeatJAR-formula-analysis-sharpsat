@@ -21,10 +21,9 @@
 package de.featjar.formula.configuration.list;
 
 import de.featjar.base.computation.IComputation;
-import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.formula.analysis.bool.BooleanSolutionList;
 import de.featjar.formula.analysis.metrics.ISampleMetric;
-
+import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
 import java.math.BigDecimal;
 import java.math.MathContext;
 

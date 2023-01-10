@@ -20,8 +20,8 @@
  */
 package de.featjar.formula.analysis.sharpsat;
 
-import de.featjar.base.computation.IComputation;
 import de.featjar.base.computation.FutureResult;
+import de.featjar.base.computation.IComputation;
 
 /**
  * Counts the number of valid solutions to a formula.
@@ -33,7 +33,8 @@ public class HasSolutionAnalysis extends SharpSATSolverAnalysis<Boolean> {
         super(inputComputation);
     }
 
-    public HasSolutionAnalysis(IComputation<CNF> inputComputation, Assignment assumptions, long timeoutInMs, long randomSeed) {
+    public HasSolutionAnalysis(
+            IComputation<CNF> inputComputation, Assignment assumptions, long timeoutInMs, long randomSeed) {
         super(inputComputation, assumptions, timeoutInMs, randomSeed);
     }
 

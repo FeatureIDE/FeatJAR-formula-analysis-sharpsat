@@ -35,7 +35,8 @@ public abstract class SharpSATSolverAnalysis<T> {
         super(inputComputation, SharpSATSolver::new);
     }
 
-    protected SharpSATSolverAnalysis(IComputation<CNF> inputComputation, Assignment assumptions, long timeoutInMs, long randomSeed) {
+    protected SharpSATSolverAnalysis(
+            IComputation<CNF> inputComputation, Assignment assumptions, long timeoutInMs, long randomSeed) {
         super(inputComputation, SharpSATSolver::new, assumptions, timeoutInMs, randomSeed);
     }
 }
