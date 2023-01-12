@@ -26,8 +26,6 @@ import de.featjar.base.data.Result;
 import de.featjar.base.io.IO;
 import de.featjar.bin.sharpsat.SharpSATBinary;
 import de.featjar.formula.analysis.ISolver;
-import de.featjar.formula.analysis.bool.BooleanClauseList;
-import de.featjar.formula.io.dimacs.DIMACSCNFFormat;
 import de.featjar.formula.io.dimacs.DIMACSFormulaFormat;
 import de.featjar.formula.structure.formula.IFormula;
 
@@ -35,7 +33,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.time.Duration;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class SharpSATSolver implements ISolver {
     protected final IFormula formula;
@@ -77,8 +74,9 @@ public class SharpSATSolver implements ISolver {
                     return Result.empty(e);
                 }
                 return FeatJAR.extension(SharpSATBinary.class)
-                        .execute("-noCC", "-noIBCP", "-t", String.valueOf(timeout.toSeconds()), temp.toString())
-                        .flatMap(lines -> Result.ofOptional(lines.findFirst().map(BigInteger::new)));
+                        .getProcess("-noCC", "-noIBCP", "-t", String.valueOf(timeout.toSeconds()), temp.toString())
+                        .get()
+                        .flatMap(lines -> lines.isEmpty() ? Result.empty() : Result.of(new BigInteger(lines.get(0))));
             });
         } catch (final Exception e) {
             FeatJAR.log().error(e);
