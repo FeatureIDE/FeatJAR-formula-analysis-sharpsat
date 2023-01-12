@@ -23,7 +23,7 @@ package de.featjar.formula.configuration.list;
 import de.featjar.base.computation.IComputation;
 import de.featjar.formula.analysis.bool.BooleanSolutionList;
 import de.featjar.formula.analysis.metrics.ISampleMetric;
-import de.featjar.formula.analysis.sharpsat.CountSolutionsAnalysis;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 
@@ -33,29 +33,38 @@ import java.math.MathContext;
  * @author Sebastian Krieter
  */
 public class CompletenessMetric implements ISampleMetric {
-
-    private IComputation<CNF> rep;
-
-    public CompletenessMetric(IComputation<CNF> rep) {
-        this.rep = rep;
-    }
-
     @Override
     public double get(BooleanSolutionList sample) {
-        final BigDecimal totalSize = rep //
-                .map(CountSolutionsAnalysis::new) //
-                .getResult()
-                .map(BigDecimal::new) //
-                .orElseThrow();
-        return totalSize.signum() > 0 //
-                ? new BigDecimal(sample.getSolutions().size()) //
-                        .divide(totalSize, MathContext.DECIMAL128) //
-                        .doubleValue()
-                : 0;
+        return 0;
     }
 
     @Override
     public String getName() {
-        return "Completeness";
+        return null;
     }
+
+//    private IComputation<CNF> rep;
+//
+//    public CompletenessMetric(IComputation<CNF> rep) {
+//        this.rep = rep;
+//    }
+//
+//    @Override
+//    public double get(BooleanSolutionList sample) {
+//        final BigDecimal totalSize = rep //
+//                .map(CountSolutionsAnalysis::new) //
+//                .getResult()
+//                .map(BigDecimal::new) //
+//                .orElseThrow();
+//        return totalSize.signum() > 0 //
+//                ? new BigDecimal(sample.getSolutions().size()) //
+//                        .divide(totalSize, MathContext.DECIMAL128) //
+//                        .doubleValue()
+//                : 0;
+//    }
+//
+//    @Override
+//    public String getName() {
+//        return "Completeness";
+//    }
 }
