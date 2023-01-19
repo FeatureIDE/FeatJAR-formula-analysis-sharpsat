@@ -39,7 +39,7 @@ public class SharpSATSolver implements ISolver {
     protected Duration timeout = ITimeoutDependency.DEFAULT_TIMEOUT;
     protected boolean isTimeoutOccurred;
 
-    public SharpSATSolver(IFormula formula) {
+    public SharpSATSolver(IFormula formula) { // todo: use boolean clause list input
         this.formula = formula;
     }
 
