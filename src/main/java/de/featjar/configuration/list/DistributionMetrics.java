@@ -20,8 +20,12 @@
  */
 package de.featjar.configuration.list;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.List;
+import java.util.function.DoubleSupplier;
+
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
-import de.featjar.clauses.ClauseList;
 import de.featjar.clauses.Clauses;
 import de.featjar.clauses.LiteralList;
 import de.featjar.clauses.solutions.SolutionList;
@@ -30,10 +34,6 @@ import de.featjar.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.ModelRepresentation;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.List;
-import java.util.function.DoubleSupplier;
 
 public class DistributionMetrics extends AggregatableMetrics {
 
@@ -50,7 +50,7 @@ public class DistributionMetrics extends AggregatableMetrics {
             totalCount = rep.getResult(analysis).map(BigDecimal::new).orElseThrow();
         }
 
-        public double compute(SolutionList sample, ClauseList expression) {
+        public double compute(SolutionList sample, List<LiteralList> expression) {
             final double sampleSize = sample.getSolutions().size();
             if (sampleSize == 0) {
                 return 0;
@@ -79,17 +79,17 @@ public class DistributionMetrics extends AggregatableMetrics {
     }
 
     private final RatioDiffFunction function;
-    private final List<ClauseList> expressionList;
+    private final List<List<LiteralList>> expressionList;
     private final String functionName;
 
-    public DistributionMetrics(ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
+    public DistributionMetrics(ModelRepresentation rep, List<List<LiteralList>> expressionList, String functionName) {
         this.expressionList = expressionList;
         this.functionName = functionName;
         function = rep != null ? new RatioDiffFunction(rep) : null;
     }
 
     public static List<SampleMetric> getAllAggregates(
-            ModelRepresentation rep, List<ClauseList> expressionList, String functionName) {
+            ModelRepresentation rep, List<List<LiteralList>> expressionList, String functionName) {
         return new DistributionMetrics(rep, expressionList, functionName).getAllAggregates();
     }
 
@@ -102,7 +102,7 @@ public class DistributionMetrics extends AggregatableMetrics {
     public double[] computeValues() {
         final double[] values = new double[expressionList.size()];
         int index = 0;
-        for (final ClauseList expression : expressionList) {
+        for (final List<LiteralList> expression : expressionList) {
             values[index++] = function.compute(sample, expression);
         }
         return values;
