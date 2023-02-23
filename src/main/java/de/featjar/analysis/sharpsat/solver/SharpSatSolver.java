@@ -20,15 +20,6 @@
  */
 package de.featjar.analysis.sharpsat.solver;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import de.featjar.bin.sharpsat.SharpSatBinary;
 import de.featjar.clauses.CNF;
 import de.featjar.clauses.LiteralList;
@@ -40,6 +31,14 @@ import de.featjar.formula.structure.atomic.literal.VariableMap;
 import de.featjar.util.data.Pair;
 import de.featjar.util.io.IO;
 import de.featjar.util.logging.Logger;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class SharpSatSolver implements de.featjar.analysis.solver.SharpSatSolver {
 

@@ -42,7 +42,8 @@ public class SharpSatSolverFormula extends AbstractDynamicFormula<LiteralList> {
 
     @Override
     public List<LiteralList> push(Formula formula) throws RuntimeContradictionException {
-        final List<LiteralList> clauses = FormulaToCNF.convert(formula, variableMap).getClauses();
+        final List<LiteralList> clauses =
+                FormulaToCNF.convert(formula, variableMap).getClauses();
         clauses.forEach(constraints::add);
         return clauses;
     }

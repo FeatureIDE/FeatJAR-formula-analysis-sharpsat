@@ -20,11 +20,6 @@
  */
 package de.featjar.configuration.list;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.List;
-import java.util.function.DoubleSupplier;
-
 import de.featjar.analysis.sharpsat.CountSolutionsAnalysis;
 import de.featjar.clauses.Clauses;
 import de.featjar.clauses.LiteralList;
@@ -34,6 +29,10 @@ import de.featjar.clauses.solutions.metrics.SampleMetric;
 import de.featjar.formula.ModelRepresentation;
 import de.featjar.formula.structure.Formula;
 import de.featjar.formula.structure.atomic.literal.VariableMap;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.List;
+import java.util.function.DoubleSupplier;
 
 public class DistributionMetrics extends AggregatableMetrics {
 
