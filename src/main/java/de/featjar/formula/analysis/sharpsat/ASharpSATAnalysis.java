@@ -1,69 +1,52 @@
 /*
- * Copyright (C) 2023 Sebastian Krieter
+ * Copyright (C) 2023 FeatJAR-Development-Team
  *
- * This file is part of FeatJAR-formula-analysis-sat4j.
+ * This file is part of FeatJAR-formula-analysis-sharpsat.
  *
- * formula-analysis-sat4j is free software: you can redistribute it and/or modify it
+ * formula-analysis-sharpsat is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3.0 of the License,
  * or (at your option) any later version.
  *
- * formula-analysis-sat4j is distributed in the hope that it will be useful,
+ * formula-analysis-sharpsat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with formula-analysis-sat4j. If not, see <https://www.gnu.org/licenses/>.
+ * along with formula-analysis-sharpsat. If not, see <https://www.gnu.org/licenses/>.
  *
- * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sat4j> for further information.
+ * See <https://github.com/FeatJAR> for further information.
  */
 package de.featjar.formula.analysis.sharpsat;
 
 import de.featjar.base.FeatJAR;
-import de.featjar.base.computation.*;
-import de.featjar.formula.analysis.bool.BooleanClauseList;
+import de.featjar.base.computation.AComputation;
+import de.featjar.base.computation.Computations;
+import de.featjar.base.computation.Dependency;
+import de.featjar.base.computation.IComputation;
+import de.featjar.base.computation.ITimeoutDependency;
 import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
 import de.featjar.formula.structure.formula.IFormula;
-
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ASharpSATAnalysis<T> extends AComputation<T>
-        implements IAnalysis<IFormula, T>,
-                ITimeoutDependency {
-    protected static final Dependency<IFormula> FORMULA = newRequiredDependency();
-    protected static final Dependency<Duration> TIMEOUT = newOptionalDependency(ITimeoutDependency.DEFAULT_TIMEOUT);
+public abstract class ASharpSATAnalysis<T> extends AComputation<T> {
+    protected static final Dependency<IFormula> FORMULA = Dependency.newDependency(IFormula.class);
+    protected static final Dependency<Duration> TIMEOUT = Dependency.newDependency(Duration.class);
 
-    public ASharpSATAnalysis(IComputation<IFormula> formula, Dependency<?>... dependencies) {
-        List<Dependency<?>> dependenciesList = new ArrayList<>();
-        dependenciesList.add(FORMULA);
-        dependenciesList.add(TIMEOUT);
-        dependenciesList.addAll(List.of(dependencies));
-        dependOn(dependenciesList);
-        setInput(formula);
+    public ASharpSATAnalysis(IComputation<IFormula> formula, Object... dependencies) {
+        super(formula, Computations.of(ITimeoutDependency.DEFAULT_TIMEOUT), dependencies);
     }
 
-    @Override
-    public Dependency<IFormula> getInputDependency() {
-        return FORMULA;
+    public ASharpSATAnalysis(ComputeSolutionCountSharpSAT other) {
+        super(other);
     }
 
-    @Override
-    public Dependency<Duration> getTimeoutDependency() {
-        return TIMEOUT;
-    }
-
-    public SharpSATSolver initializeSolver(DependencyList dependencyList) {
-        IFormula formula = dependencyList.get(FORMULA);
-        Duration timeout = dependencyList.get(TIMEOUT);
+    public SharpSATSolver initializeSolver(List<Object> dependencyList) {
+        IFormula formula = FORMULA.get(dependencyList);
+        Duration timeout = TIMEOUT.get(dependencyList);
         FeatJAR.log().debug("initializing SAT4J");
-        //                    Feat.log().debug(clauseList.toValue().get());
-        //                    Feat.log().debug("assuming " +
-        // assumedAssignment.toValue(clauseList.getVariableMap()).getAndLogProblems());
-        //                    Feat.log().debug("assuming " + assumedClauseList.toValue().get());
-        //                    Feat.log().debug(clauseList.getVariableMap());
         FeatJAR.log().debug(formula);
         SharpSATSolver solver = new SharpSATSolver(formula);
         solver.setTimeout(timeout);

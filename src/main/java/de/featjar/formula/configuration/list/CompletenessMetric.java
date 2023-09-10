@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Sebastian Krieter
+ * Copyright (C) 2023 FeatJAR-Development-Team
  *
  * This file is part of FeatJAR-formula-analysis-sharpsat.
  *
@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with formula-analysis-sharpsat. If not, see <https://www.gnu.org/licenses/>.
  *
- * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
+ * See <https://github.com/FeatJAR> for further information.
  */
 package de.featjar.formula.configuration.list;
 
 import de.featjar.base.computation.IComputation;
 import de.featjar.formula.analysis.bool.BooleanSolutionList;
 import de.featjar.formula.analysis.metrics.ISampleMetric;
-
+import de.featjar.formula.analysis.sharpsat.ComputeSolutionCountSharpSAT;
+import de.featjar.formula.structure.formula.IFormula;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
@@ -32,39 +33,31 @@ import java.math.MathContext;
  *
  * @author Sebastian Krieter
  */
+// TODO Make computation
 public class CompletenessMetric implements ISampleMetric {
+
+    private IComputation<IFormula> rep;
+
+    public CompletenessMetric(IComputation<IFormula> rep) {
+        this.rep = rep;
+    }
+
     @Override
     public double get(BooleanSolutionList sample) {
-        return 0;
+        final BigDecimal totalSize = rep //
+                .map(ComputeSolutionCountSharpSAT::new) //
+                .computeResult()
+                .map(BigDecimal::new) //
+                .orElseThrow();
+        return totalSize.signum() > 0 //
+                ? new BigDecimal(sample.size()) //
+                        .divide(totalSize, MathContext.DECIMAL128) //
+                        .doubleValue()
+                : 0;
     }
 
     @Override
     public String getName() {
-        return null;
+        return "Completeness";
     }
-
-//    private IComputation<CNF> rep;
-//
-//    public CompletenessMetric(IComputation<CNF> rep) {
-//        this.rep = rep;
-//    }
-//
-//    @Override
-//    public double get(BooleanSolutionList sample) {
-//        final BigDecimal totalSize = rep //
-//                .map(CountSolutionsAnalysis::new) //
-//                .getResult()
-//                .map(BigDecimal::new) //
-//                .orElseThrow();
-//        return totalSize.signum() > 0 //
-//                ? new BigDecimal(sample.getSolutions().size()) //
-//                        .divide(totalSize, MathContext.DECIMAL128) //
-//                        .doubleValue()
-//                : 0;
-//    }
-//
-//    @Override
-//    public String getName() {
-//        return "Completeness";
-//    }
 }

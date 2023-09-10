@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Sebastian Krieter
+ * Copyright (C) 2023 FeatJAR-Development-Team
  *
  * This file is part of FeatJAR-formula-analysis-sharpsat.
  *
@@ -16,29 +16,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with formula-analysis-sharpsat. If not, see <https://www.gnu.org/licenses/>.
  *
- * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
+ * See <https://github.com/FeatJAR> for further information.
  */
 package de.featjar.analysis.sharpsat.solver;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.featjar.base.FeatJAR;
+import de.featjar.base.computation.Computations;
 import de.featjar.base.data.Result;
-import de.featjar.base.extension.ExtensionManager;
-import de.featjar.base.log.Log;
-import de.featjar.formula.structure.IExpression;
+import de.featjar.base.io.IO;
+import de.featjar.formula.analysis.sharpsat.ComputeSolutionCountSharpSAT;
+import de.featjar.formula.io.FormulaFormats;
+import de.featjar.formula.structure.Expressions;
+import de.featjar.formula.structure.formula.IFormula;
 import de.featjar.formula.structure.formula.connective.And;
 import de.featjar.formula.structure.formula.connective.BiImplies;
 import de.featjar.formula.structure.formula.connective.Implies;
 import de.featjar.formula.structure.formula.connective.Or;
 import de.featjar.formula.structure.formula.predicate.Literal;
-import de.featjar.formula.structure.map.TermMap;
-import de.featjar.formula.tmp.Formulas;
 import java.math.BigInteger;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class SharpSATSolverTest {
@@ -52,22 +55,22 @@ public class SharpSATSolverTest {
             "gpl_medium_model", //
             "500-100");
 
-    private static ModelRepresentation load(final Path modelFile) {
-        return ModelRepresentation.load(modelFile) //
+    private static IFormula load(final Path modelFile) {
+        return IO.load(modelFile, FormulaFormats.getInstance()) //
                 .orElseThrow(p -> new IllegalArgumentException(
-                        p.isEmpty() ? null : p.get(0).toException()));
+                        p.isEmpty() ? null : p.get(0).getException()));
     }
 
-    static {
-        ExtensionManager.install();
+    @BeforeAll
+    public static void init() {
+        FeatJAR.initialize();
     }
 
     @Test
-    public void count() {
-        final TermMap variables = new TermMap();
-        final Literal a = variables.createLiteral("a");
-        final Literal b = variables.createLiteral("b");
-        final Literal c = variables.createLiteral("c");
+    public void formulaHas3Solutions() {
+        final Literal a = Expressions.literal("a");
+        final Literal b = Expressions.literal("b");
+        final Literal c = Expressions.literal("c");
 
         final Implies implies1 = new Implies(a, b);
         final Or or = new Or(implies1, c);
@@ -75,24 +78,20 @@ public class SharpSATSolverTest {
         final And and = new And(equals, c);
         final Implies formula = new Implies(or, and);
 
-        final IExpression cnfExpression = Formulas.toCNF(formula).get();
-        final ModelRepresentation rep = new ModelRepresentation(cnfExpression);
-
-        final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-        final Result<?> result = rep.getResult(analysis);
-        result.orElseGet(Log::problem);
-        assertTrue(result.isPresent());
-        assertEquals(BigInteger.valueOf(3), result.get());
+        checkCount(formula, 3);
     }
 
     @Test
-    public void count2() {
-        final ModelRepresentation rep = load(modelDirectory.resolve(modelNames.get(3) + ".xml"));
+    public void gplHas960Solutions() {
+        IFormula formula = load(modelDirectory.resolve(modelNames.get(3) + ".xml"));
+        checkCount(formula, 960);
+    }
 
-        final CountSolutionsAnalysis analysis = new CountSolutionsAnalysis();
-        final Result<?> result = rep.getResult(analysis);
-        result.orElseGet(Log::problem);
+    private void checkCount(final IFormula formula, int count) {
+        IFormula cnf = formula.toCNF().orElseThrow();
+        final Result<BigInteger> result =
+                Computations.of(cnf).map(ComputeSolutionCountSharpSAT::new).computeResult();
         assertTrue(result.isPresent());
-        assertEquals(BigInteger.valueOf(960), result.get());
+        assertEquals(BigInteger.valueOf(count), result.get());
     }
 }
