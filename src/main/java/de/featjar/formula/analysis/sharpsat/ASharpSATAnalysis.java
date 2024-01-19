@@ -32,8 +32,8 @@ import java.time.Duration;
 import java.util.List;
 
 public abstract class ASharpSATAnalysis<T> extends AComputation<T> {
-    protected static final Dependency<IFormula> FORMULA = Dependency.newDependency(IFormula.class);
-    protected static final Dependency<Duration> TIMEOUT = Dependency.newDependency(Duration.class);
+    public static final Dependency<IFormula> FORMULA = Dependency.newDependency(IFormula.class);
+    public static final Dependency<Duration> TIMEOUT = Dependency.newDependency(Duration.class);
 
     public ASharpSATAnalysis(IComputation<IFormula> formula, Object... dependencies) {
         super(formula, Computations.of(ITimeoutDependency.DEFAULT_TIMEOUT), dependencies);

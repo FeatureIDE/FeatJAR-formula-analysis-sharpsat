@@ -72,10 +72,20 @@ public class SharpSATSolver implements ISolver {
                     "-t",
                     String.valueOf(timeout.toSeconds()),
                     tempFile.getPath().toString());
-            Result<List<String>> result = process.get();
-            return result.flatMap(lines -> lines.isEmpty() ? Result.empty() : Result.of(new BigInteger(lines.get(0))));
-        } catch (Exception e) {
 
+            Result<List<String>> result = process.get();
+            result.map(lines -> lines.isEmpty() ? null : lines.get(0)).flatMap(s -> {
+                if ("TIMEOUT".equals(s)) {
+                    return Result.of(BigInteger.valueOf(-1));
+                } else {
+                    try {
+                        return Result.of(new BigInteger(s));
+                    } catch (NumberFormatException e) {
+                        return Result.empty(e);
+                    }
+                }
+            });
+        } catch (Exception e) {
             FeatJAR.log().error(e);
         }
         return Result.empty();
