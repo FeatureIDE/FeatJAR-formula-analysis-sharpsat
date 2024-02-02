@@ -25,7 +25,6 @@ import de.featjar.base.computation.AComputation;
 import de.featjar.base.computation.Computations;
 import de.featjar.base.computation.Dependency;
 import de.featjar.base.computation.IComputation;
-import de.featjar.base.computation.ITimeoutDependency;
 import de.featjar.formula.analysis.sharpsat.solver.SharpSATSolver;
 import de.featjar.formula.structure.formula.IFormula;
 import java.time.Duration;
@@ -36,7 +35,7 @@ public abstract class ASharpSATAnalysis<T> extends AComputation<T> {
     public static final Dependency<Duration> TIMEOUT = Dependency.newDependency(Duration.class);
 
     public ASharpSATAnalysis(IComputation<IFormula> formula, Object... dependencies) {
-        super(formula, Computations.of(ITimeoutDependency.DEFAULT_TIMEOUT), dependencies);
+        super(formula, Computations.of(Duration.ZERO), dependencies);
     }
 
     public ASharpSATAnalysis(ComputeSolutionCountSharpSAT other) {

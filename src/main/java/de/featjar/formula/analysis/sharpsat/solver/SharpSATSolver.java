@@ -21,7 +21,6 @@
 package de.featjar.formula.analysis.sharpsat.solver;
 
 import de.featjar.base.FeatJAR;
-import de.featjar.base.computation.ITimeoutDependency;
 import de.featjar.base.data.Result;
 import de.featjar.base.env.Process;
 import de.featjar.base.env.TempFile;
@@ -37,7 +36,7 @@ import java.util.Objects;
 
 public class SharpSATSolver implements ISolver {
     protected final IFormula formula;
-    protected Duration timeout = ITimeoutDependency.DEFAULT_TIMEOUT;
+    protected Duration timeout = Duration.ZERO;
     protected boolean isTimeoutOccurred;
 
     public SharpSATSolver(IFormula formula) { // todo: use boolean clause list input
