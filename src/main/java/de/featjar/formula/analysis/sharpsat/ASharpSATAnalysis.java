@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 FeatJAR-Development-Team
+ * Copyright (C) 2024 FeatJAR-Development-Team
  *
  * This file is part of FeatJAR-formula-analysis-sharpsat.
  *
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with formula-analysis-sharpsat. If not, see <https://www.gnu.org/licenses/>.
  *
- * See <https://github.com/FeatJAR> for further information.
+ * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
  */
 package de.featjar.formula.analysis.sharpsat;
 
@@ -48,7 +48,7 @@ public abstract class ASharpSATAnalysis<T> extends AComputation<T> {
         FeatJAR.log().debug("initializing SAT4J");
         FeatJAR.log().debug(formula);
         SharpSATSolver solver = new SharpSATSolver(formula);
-        solver.setTimeout(timeout);
+        //        solver.setTimeout(timeout);
         return solver;
     }
 }

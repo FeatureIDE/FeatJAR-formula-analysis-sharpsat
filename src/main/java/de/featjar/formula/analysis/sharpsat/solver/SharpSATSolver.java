@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 FeatJAR-Development-Team
+ * Copyright (C) 2024 FeatJAR-Development-Team
  *
  * This file is part of FeatJAR-formula-analysis-sharpsat.
  *
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with formula-analysis-sharpsat. If not, see <https://www.gnu.org/licenses/>.
  *
- * See <https://github.com/FeatJAR> for further information.
+ * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
  */
 package de.featjar.formula.analysis.sharpsat.solver;
 
@@ -73,21 +73,12 @@ public class SharpSATSolver implements ISolver {
                     tempFile.getPath().toString());
 
             Result<List<String>> result = process.get();
-            result.map(lines -> lines.isEmpty() ? null : lines.get(0)).flatMap(s -> {
-                if ("TIMEOUT".equals(s)) {
-                    return Result.of(BigInteger.valueOf(-1));
-                } else {
-                    try {
-                        return Result.of(new BigInteger(s));
-                    } catch (NumberFormatException e) {
-                        return Result.empty(e);
-                    }
-                }
-            });
+            return result.map(lines -> lines.isEmpty() ? null : lines.get(0))
+                    .map(s -> "TIMEOUT".equals(s) ? BigInteger.valueOf(-1) : new BigInteger(s));
         } catch (Exception e) {
             FeatJAR.log().error(e);
+            return Result.empty(e);
         }
-        return Result.empty();
     }
 
     public Result<Boolean> hasSolution() {
