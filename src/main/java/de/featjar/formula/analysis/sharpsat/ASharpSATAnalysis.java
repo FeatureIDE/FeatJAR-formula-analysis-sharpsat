@@ -48,7 +48,7 @@ public abstract class ASharpSATAnalysis<T> extends AComputation<T> {
         FeatJAR.log().debug("initializing SAT4J");
         FeatJAR.log().debug(formula);
         SharpSATSolver solver = new SharpSATSolver(formula);
-        //        solver.setTimeout(timeout);
+        solver.setTimeout(timeout);
         return solver;
     }
 }
