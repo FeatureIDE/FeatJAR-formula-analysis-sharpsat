@@ -24,16 +24,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.featjar.Common;
+import de.featjar.analysis.sharpsat.computation.ComputeSolutionCountSharpSAT;
 import de.featjar.base.computation.Computations;
 import de.featjar.base.data.Result;
-import de.featjar.formula.analysis.sharpsat.ComputeSolutionCountSharpSAT;
 import de.featjar.formula.structure.Expressions;
-import de.featjar.formula.structure.formula.IFormula;
-import de.featjar.formula.structure.formula.connective.And;
-import de.featjar.formula.structure.formula.connective.BiImplies;
-import de.featjar.formula.structure.formula.connective.Implies;
-import de.featjar.formula.structure.formula.connective.Or;
-import de.featjar.formula.structure.formula.predicate.Literal;
+import de.featjar.formula.structure.IFormula;
+import de.featjar.formula.structure.connective.And;
+import de.featjar.formula.structure.connective.BiImplies;
+import de.featjar.formula.structure.connective.Implies;
+import de.featjar.formula.structure.connective.Or;
+import de.featjar.formula.structure.predicate.Literal;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Test;
 

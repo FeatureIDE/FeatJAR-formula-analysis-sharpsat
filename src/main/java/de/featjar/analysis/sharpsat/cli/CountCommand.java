@@ -18,26 +18,34 @@
  *
  * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
  */
-package de.featjar.formula.analysis.sharpsat;
+package de.featjar.analysis.sharpsat.cli;
 
+import de.featjar.analysis.sharpsat.computation.ComputeSolutionCountSharpSAT;
 import de.featjar.base.computation.IComputation;
-import de.featjar.base.computation.Progress;
-import de.featjar.base.data.Result;
-import de.featjar.formula.structure.formula.IFormula;
+import de.featjar.formula.assignment.BooleanAssignment;
+import de.featjar.formula.structure.IFormula;
 import java.math.BigInteger;
-import java.util.List;
+import java.util.Optional;
 
-public class ComputeSolutionCountSharpSAT extends ASharpSATAnalysis<BigInteger> {
-    public ComputeSolutionCountSharpSAT(IComputation<IFormula> cnfFormula) {
-        super(cnfFormula);
-    }
+public class CountCommand extends ASharpsatAnalysisCommand<BigInteger, BooleanAssignment> {
 
-    public ComputeSolutionCountSharpSAT(ComputeSolutionCountSharpSAT other) {
-        super(other);
+    @Override
+    public Optional<String> getDescription() {
+        return Optional.of("Computes the number of solutions for a given formula using sharpsat");
     }
 
     @Override
-    public Result<BigInteger> compute(List<Object> dependencyList, Progress progress) {
-        return initializeSolver(dependencyList).countSolutions();
+    public IComputation<BigInteger> newAnalysis(IComputation<IFormula> formula) {
+        return formula.map(ComputeSolutionCountSharpSAT::new);
+    }
+
+    @Override
+    public String serializeResult(BigInteger count) {
+        return count.toString();
+    }
+
+    @Override
+    public Optional<String> getShortName() {
+        return Optional.of("count-sharpsat");
     }
 }

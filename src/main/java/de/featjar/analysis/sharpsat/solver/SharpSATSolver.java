@@ -18,17 +18,17 @@
  *
  * See <https://github.com/FeatureIDE/FeatJAR-formula-analysis-sharpsat> for further information.
  */
-package de.featjar.formula.analysis.sharpsat.solver;
+package de.featjar.analysis.sharpsat.solver;
 
+import de.featjar.analysis.ISolver;
 import de.featjar.base.FeatJAR;
 import de.featjar.base.data.Result;
 import de.featjar.base.env.Process;
 import de.featjar.base.env.TempFile;
 import de.featjar.base.io.IO;
 import de.featjar.bin.sharpsat.SharpSATBinary;
-import de.featjar.formula.analysis.ISolver;
 import de.featjar.formula.io.dimacs.FormulaDimacsFormat;
-import de.featjar.formula.structure.formula.IFormula;
+import de.featjar.formula.structure.IFormula;
 import java.math.BigInteger;
 import java.time.Duration;
 import java.util.List;
