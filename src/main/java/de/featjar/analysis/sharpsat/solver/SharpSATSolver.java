@@ -21,12 +21,12 @@
 package de.featjar.analysis.sharpsat.solver;
 
 import de.featjar.analysis.ISolver;
+import de.featjar.analysis.sharpsat.bin.SharpSATBinary;
 import de.featjar.base.FeatJAR;
 import de.featjar.base.data.Result;
 import de.featjar.base.env.Process;
 import de.featjar.base.env.TempFile;
 import de.featjar.base.io.IO;
-import de.featjar.bin.sharpsat.SharpSATBinary;
 import de.featjar.formula.io.dimacs.FormulaDimacsFormat;
 import de.featjar.formula.structure.IFormula;
 import java.math.BigInteger;
