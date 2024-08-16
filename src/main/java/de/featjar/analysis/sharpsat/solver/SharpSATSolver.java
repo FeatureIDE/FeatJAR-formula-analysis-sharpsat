@@ -27,7 +27,6 @@ import de.featjar.base.data.Result;
 import de.featjar.base.env.Process;
 import de.featjar.base.env.TempFile;
 import de.featjar.base.io.IO;
-import de.featjar.analysis.sharpsat.bin.SharpSATBinary;
 import de.featjar.formula.io.dimacs.FormulaDimacsFormat;
 import de.featjar.formula.structure.IFormula;
 import java.math.BigInteger;
