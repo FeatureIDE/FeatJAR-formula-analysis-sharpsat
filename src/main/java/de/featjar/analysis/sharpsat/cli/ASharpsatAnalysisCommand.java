@@ -37,11 +37,6 @@ public abstract class ASharpsatAnalysisCommand<T, U> extends AAnalysisCommand<T>
     protected IFormula inputFormula;
 
     @Override
-    public List<Option<?>> getOptions() {
-        return ICommand.addOptions(super.getOptions());
-    }
-
-    @Override
     protected IComputation<T> newComputation() {
         inputFormula = optionParser
                 .getResult(INPUT_OPTION)
