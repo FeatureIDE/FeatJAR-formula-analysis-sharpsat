@@ -21,6 +21,7 @@
 package de.featjar.analysis.sharpsat.solver;
 
 import de.featjar.analysis.ISolver;
+import de.featjar.analysis.sharpsat.bin.SharpSATBinary;
 import de.featjar.base.FeatJAR;
 import de.featjar.base.data.Result;
 import de.featjar.base.env.Process;
