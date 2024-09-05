@@ -64,7 +64,7 @@ public class SharpSATSolverTest extends Common {
         IFormula cnf = formula.toCNF().orElseThrow();
         final Result<BigInteger> result =
                 Computations.of(cnf).map(ComputeSolutionCountSharpSAT::new).computeResult();
-        assertTrue(result.isPresent());
+        assertTrue(result.isPresent(), result.printProblems());
         assertEquals(BigInteger.valueOf(count), result.get());
     }
 }
