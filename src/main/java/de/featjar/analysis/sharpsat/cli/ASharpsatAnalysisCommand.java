@@ -30,7 +30,7 @@ import de.featjar.formula.computation.ComputeNNFFormula;
 import de.featjar.formula.io.FormulaFormats;
 import de.featjar.formula.structure.IFormula;
 
-public abstract class ASharpsatAnalysisCommand<T, U> extends AAnalysisCommand<T> {
+public abstract class ASharpsatAnalysisCommand<T> extends AAnalysisCommand<T> {
 
     protected IFormula inputFormula;
 
